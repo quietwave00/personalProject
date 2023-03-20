@@ -15,7 +15,7 @@ public class ApiUtils<T> {
         return new ApiResult<>(true, response);
     }
 
-    public static ApiResult<?> error(ErrorCode errorCode) {
+    public ApiResult<?> error(ErrorCode errorCode) {
         return new ApiResult<>(false, new ApiError(errorCode));
     }
 

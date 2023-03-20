@@ -11,7 +11,7 @@ public class Likes {
 
     @ManyToOne
     @JoinColumn(name = "user_no")
-    private Users user;
+    private User user;
 
     @OneToOne
     private Board board;
