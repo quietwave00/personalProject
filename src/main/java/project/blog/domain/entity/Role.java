@@ -1,5 +1,5 @@
 package project.blog.domain.entity;
 
 public enum Role {
-    PUBLIC_USER, PRIVATE_USER, ADMIN
+    ROLE_PUBLIC_USER, ROLE_PRIVATE_USER, ROLE_ADMIN
 }

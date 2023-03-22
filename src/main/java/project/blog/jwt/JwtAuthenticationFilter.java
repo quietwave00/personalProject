@@ -15,6 +15,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import project.blog.auth.PrincipalDetails;
 import project.blog.domain.entity.User;
+import project.blog.user.dto.request.LoginRequestDto;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -42,14 +43,14 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         try {
             ObjectMapper om = new ObjectMapper(); //json으로 들어오는 값
-            User user = om.readValue(request.getInputStream(), User.class);
-            log.info("user: {}", user);
+            LoginRequestDto loginRequestDto = om.readValue(request.getInputStream(), LoginRequestDto.class);
+            log.info("user: {}", loginRequestDto);
 
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUserId(), user.getPassword());
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequestDto.getUserId(), loginRequestDto.getPassword());
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
 
             PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-            log.info("로그인 완료: {}", principalDetails.getUsername());
+            log.info("로그인 완료: {}", principalDetails.getUser().getUserId());
 
             return authentication;
         } catch (IOException e) {
@@ -71,7 +72,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .withSubject("token ")
                 .withExpiresAt(new Date(System.currentTimeMillis() + (60000 * 10)))
                 .withClaim("id", principalDetails.getUser().getUserId())
-                .withClaim("nickname", principalDetails.getUser().getNickname())
+                .withClaim("password", principalDetails.getUser().getPassword())
                 .sign(Algorithm.HMAC512("blog"));
 
         response.addHeader("Authorization", "Bearer " + jwtToken);

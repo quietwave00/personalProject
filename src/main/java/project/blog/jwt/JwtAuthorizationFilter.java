@@ -39,24 +39,18 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
       String jwtHeader = request.getHeader("Authorization");
 
-
-        System.out.println(request.getRequestURL());
       //헤더 확인
       if(jwtHeader == null || !jwtHeader.startsWith("Bearer")) {
+          log.info("header 오류");
           chain.doFilter(request, response);
-          if(!request.getRequestURL().toString().equals("http://localhost:8080/blog/user/join")) {
-
-              throw new NullPointerException();
-          }
-
           return;
-
       }
 
       //토큰 검증하여 정상 사용자인지 확인
-      String jwtToken = request.getHeader("Authorization").replace("Bearer", "");
-      String userId = JWT.require(Algorithm.HMAC512("cos")).build().verify(jwtToken).getClaim("userId").asString();
-        System.out.println(userId);
+      String jwtToken = request.getHeader("Authorization").replace("Bearer ", "");
+      log.info("jwtToken: {}", jwtToken);
+      String userId = JWT.require(Algorithm.HMAC512("blog")).build().verify(jwtToken).getClaim("id").asString();
+      log.info("userId: {}", userId);
       //서명 완료
         if(userId != null) {
             log.info("서명 완료");
@@ -65,7 +59,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             PrincipalDetails principalDetails = new PrincipalDetails(userEntity);
             Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            chain.doFilter(request, response);
         }
-        chain.doFilter(request, response);
+
     }
 }

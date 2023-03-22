@@ -37,6 +37,7 @@ public class User {
     @CreationTimestamp
     private Timestamp createdDate;
 
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @OneToMany(mappedBy = "user")
@@ -76,7 +77,7 @@ public class User {
                 .userId(joinRequestDto.getUserId())
                 .password(joinRequestDto.getPassword())
                 .nickname(joinRequestDto.getNickname())
-                .role(Role.PUBLIC_USER)
+                .role(Role.ROLE_PUBLIC_USER)
                 .status(Status.Y)
                 .build();
     }
