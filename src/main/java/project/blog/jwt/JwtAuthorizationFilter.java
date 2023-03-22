@@ -15,6 +15,7 @@ import project.blog.user.exception.ErrorCode;
 import project.blog.user.repository.UserRepository;
 import project.blog.utils.dto.ApiError;
 
+import javax.naming.NoPermissionException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -38,16 +39,24 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
       String jwtHeader = request.getHeader("Authorization");
 
+
+        System.out.println(request.getRequestURL());
       //헤더 확인
       if(jwtHeader == null || !jwtHeader.startsWith("Bearer")) {
           chain.doFilter(request, response);
+          if(!request.getRequestURL().toString().equals("http://localhost:8080/blog/user/join")) {
+
+              throw new NullPointerException();
+          }
+
           return;
+
       }
 
       //토큰 검증하여 정상 사용자인지 확인
       String jwtToken = request.getHeader("Authorization").replace("Bearer", "");
       String userId = JWT.require(Algorithm.HMAC512("cos")).build().verify(jwtToken).getClaim("userId").asString();
-
+        System.out.println(userId);
       //서명 완료
         if(userId != null) {
             log.info("서명 완료");
