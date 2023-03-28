@@ -29,24 +29,6 @@ public class UserController {
         return ApiUtils.success(joinResponseDto);
     }
 
-    //로그인
-//    @PostMapping("/login")
-//    public ApiResult<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
-//        LoginResponseDto loginResponseDto = userService.login(loginRequestDto);
-//
-//        return ApiUtils.success(loginResponseDto);
-//    }
-
-    //test
-    @GetMapping("/user")
-    public String user() {
-        return "user";
-    }
-
-    @GetMapping("/admin")
-    public String admin() {
-        return "admin";
-    }
 
 
 
