@@ -6,9 +6,13 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicInsert;
 import project.blog.board.controller.dto.request.CreateBoardRequestDto;
 import project.blog.board.controller.dto.response.CreateBoardResponseDto;
+import project.blog.board.controller.dto.response.DeleteBoardResponseDto;
+import project.blog.board.controller.dto.response.DetailsBoardResponseDto;
+import project.blog.board.controller.dto.response.UpdateBoardResponseDto;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +35,10 @@ public class Board {
     @CreationTimestamp
     private Timestamp createdDate;
 
-    private Timestamp modifiedDate;
+    private LocalDateTime modifiedDate;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @ColumnDefault("0")
     private Integer count; //조회수
@@ -46,10 +53,15 @@ public class Board {
     @OneToMany(mappedBy = "board")
     private List<File> file = new ArrayList<>();
 
+
+
     @PrePersist
     public void prePersist(){
         this.count = this.count == null ? 0 : this.count;
+        this.status = this.status == null ? Status.Y : this.status;
     }
+
+
 
 
 
@@ -66,6 +78,24 @@ public class Board {
         return this;
     }
 
+    //--비즈니스 로직--
+    //글 수정
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+        this.modifiedDate = LocalDateTime.now();
+    }
+
+    //조회수
+    public void updateCount() {
+        this.count += 1;
+    }
+
+    //게시글 삭제
+    public void deleteBoard(Board findBoard) {
+        this.status = Status.N;
+    }
+
 
     //--toDto--
     public static CreateBoardResponseDto toCreateDto(Board board) {
@@ -74,6 +104,32 @@ public class Board {
                 .content(board.getContent())
                 .userId(board.getUser().getUserId())
                 .createdDate(board.getCreatedDate().toLocalDateTime())
+                .build();
+    }
+
+    public static UpdateBoardResponseDto toUpdateDto(Board board) {
+        return UpdateBoardResponseDto.builder()
+                .title(board.getTitle())
+                .content(board.getContent())
+                .userId(board.getUser().getUserId())
+                .modifiedDate(board.getModifiedDate())
+                .build();
+    }
+
+    public static DetailsBoardResponseDto toDetailDto(Board board) {
+        return DetailsBoardResponseDto.builder()
+                .title(board.getTitle())
+                .content(board.getContent())
+                .userId(board.getUser().getUserId())
+                .createdDate(board.getCreatedDate().toLocalDateTime())
+                .count(board.getCount())
+                .build();
+
+    }
+
+    public static DeleteBoardResponseDto toDeleteDto(Board board) {
+        return DeleteBoardResponseDto.builder()
+                .boardNo(board.getBoardNo())
                 .build();
     }
 
@@ -91,4 +147,7 @@ public class Board {
                 ", file=" + file +
                 '}';
     }
+
+
+
 }

@@ -3,6 +3,12 @@ package project.blog.board.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import project.blog.board.controller.dto.request.DeleteBoardRequestDto;
+import project.blog.board.controller.dto.request.DetailsBoardRequestDto;
+import project.blog.board.controller.dto.request.UpdateBoardRequestDto;
+import project.blog.board.controller.dto.response.DeleteBoardResponseDto;
+import project.blog.board.controller.dto.response.DetailsBoardResponseDto;
+import project.blog.board.controller.dto.response.UpdateBoardResponseDto;
 import project.blog.domain.entity.Board;
 import project.blog.domain.entity.User;
 import project.blog.user.exception.ErrorCode;
@@ -23,11 +29,40 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public CreateBoardResponseDto create(CreateBoardRequestDto createBoardRequestDto) {
-        log.info("여기까지 옴?");
         User findUser = userRepository.findByUserId(createBoardRequestDto.getUserId())
                 .orElseThrow(() -> new ApiError(ErrorCode.USER_ID_NOT_FOUND));
         Board board = boardRepository.save(createBoardRequestDto.toEntity().addUser(findUser));
 
         return Board.toCreateDto(board);
+    }
+
+    @Override
+    public UpdateBoardResponseDto update(UpdateBoardRequestDto updateBoardRequestDto) {
+        Board findBoard = boardRepository.findByBoardNo(updateBoardRequestDto.getBoardNo())
+                .orElseThrow(() -> new ApiError(ErrorCode.BOARD_NOT_FOUND));
+        findBoard.update(updateBoardRequestDto.getTitle(), updateBoardRequestDto.getContent());
+        Board updateBoard = boardRepository.save(findBoard);
+        return Board.toUpdateDto(updateBoard);
+    }
+
+    @Override
+    public DetailsBoardResponseDto detail(DetailsBoardRequestDto detailsBoardRequestDto) {
+        Board findBoard = boardRepository.findByBoardNo(detailsBoardRequestDto.getBoardNo())
+                .orElseThrow(() -> new ApiError(ErrorCode.BOARD_NOT_FOUND));
+        //조회수
+        if(!findBoard.getUser().getUserId().equals(detailsBoardRequestDto.getUserId())) {
+            findBoard.updateCount();
+            boardRepository.save(findBoard);
+        }
+        return Board.toDetailDto(findBoard);
+    }
+
+    @Override
+    public DeleteBoardResponseDto delete(DeleteBoardRequestDto deleteBoardRequestDto) {
+        Board findBoard = boardRepository.findByBoardNo(deleteBoardRequestDto.getBoardNo())
+                .orElseThrow(() -> new ApiError(ErrorCode.BOARD_NOT_FOUND));
+        findBoard.deleteBoard(findBoard);
+        boardRepository.save(findBoard);
+        return Board.toDeleteDto(findBoard);
     }
 }
