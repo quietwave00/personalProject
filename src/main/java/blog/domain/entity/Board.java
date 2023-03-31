@@ -39,7 +39,7 @@ public class Board {
     private Status status;
 
     @ColumnDefault("0")
-    private Integer count; //조회수
+    private Integer count;
 
     @OneToMany(mappedBy = "board")
     private List<Comment> commentList = new ArrayList<>();

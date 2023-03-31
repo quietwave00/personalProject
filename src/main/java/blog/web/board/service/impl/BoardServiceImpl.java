@@ -9,7 +9,7 @@ import blog.web.board.controller.dto.response.*;
 import blog.web.board.mapper.BoardMapper;
 import blog.domain.entity.Board;
 import blog.domain.entity.User;
-import blog.web.user.exception.ErrorCode;
+import blog.exception.ErrorCode;
 import blog.web.user.repository.UserRepository;
 import blog.utils.dto.ApiError;
 import blog.web.board.controller.dto.request.CreateBoardRequestDto;

@@ -1,7 +1,7 @@
 package blog.utils.dto;
 
 import lombok.*;
-import blog.web.user.exception.ErrorCode;
+import blog.exception.ErrorCode;
 
 @Getter
 @AllArgsConstructor

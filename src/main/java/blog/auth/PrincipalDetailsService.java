@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import blog.domain.entity.User;
-import blog.web.user.exception.ErrorCode;
+import blog.exception.ErrorCode;
 import blog.web.user.repository.UserRepository;
 
 

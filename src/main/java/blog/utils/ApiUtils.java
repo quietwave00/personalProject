@@ -5,7 +5,7 @@ import blog.utils.dto.ApiResult;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import blog.web.user.exception.ErrorCode;
+import blog.exception.ErrorCode;
 
 @Getter
 @Setter

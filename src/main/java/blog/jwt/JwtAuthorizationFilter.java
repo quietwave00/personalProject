@@ -12,7 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import blog.auth.PrincipalDetails;
 import blog.domain.entity.User;
-import blog.web.user.exception.ErrorCode;
+import blog.exception.ErrorCode;
 import blog.web.user.repository.UserRepository;
 
 import javax.servlet.FilterChain;
