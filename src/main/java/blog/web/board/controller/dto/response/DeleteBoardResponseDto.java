@@ -1,10 +1,11 @@
 package blog.web.board.controller.dto.response;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 @Builder
-@Getter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class DeleteBoardResponseDto {
     private Long boardNo;
 }

@@ -39,7 +39,7 @@ public class PrincipalDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-        log.info("loadUserByUsername() 실행");
+        log.info("인증 처리를 위한 loadUserByUsername() 실행");
         User userEntity = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new ApiError(ErrorCode.USER_ID_NOT_FOUND));
         return new PrincipalDetails(userEntity);

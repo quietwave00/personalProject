@@ -1,11 +1,12 @@
 package blog.web.board.controller.dto.request;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 import blog.domain.entity.Board;
 
 @Builder
-@Getter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreateBoardRequestDto {
     private String title;
     private String content;

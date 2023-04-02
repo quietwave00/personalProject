@@ -1,12 +1,13 @@
 package blog.web.board.controller.dto.response;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Builder
-@Getter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class DetailsBoardResponseDto {
     String title;
     String content;

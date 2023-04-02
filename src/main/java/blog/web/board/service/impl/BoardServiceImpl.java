@@ -21,17 +21,19 @@ import blog.web.board.service.BoardService;
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
 
-    private final BoardMapper mapper;
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final BoardMapper mapper;
+
 
 
     @Override
     public CreateBoardResponseDto create(CreateBoardRequestDto createBoardRequestDto) {
         User findUser = userRepository.findByUserId(createBoardRequestDto.getUserId())
                 .orElseThrow(() -> new ApiError(ErrorCode.USER_ID_NOT_FOUND));
+        log.info("toEntity: {}", mapper.toEntity(createBoardRequestDto).getBoardNo());
         Board board = boardRepository.save(mapper.toEntity(createBoardRequestDto).addUser(findUser));
-
+        log.info("toDto: {}", mapper.toCreateDto(board));
         return mapper.toCreateDto(board);
     }
 

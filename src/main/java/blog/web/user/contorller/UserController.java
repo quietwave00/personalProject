@@ -15,11 +15,6 @@ public class UserController {
 
     private final UserServiceImpl userService;
 
-    @GetMapping("/home")
-    public @ResponseBody String home() {
-        return "<h1>home</h1>";
-    }
-
     //회원가입
     @PostMapping("/join")
     public ApiResult<JoinResponseDto> join(@RequestBody JoinRequestDto joinRequestDto) {

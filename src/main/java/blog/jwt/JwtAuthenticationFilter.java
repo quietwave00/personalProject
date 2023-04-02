@@ -43,10 +43,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             log.info("user: {}", loginRequestDto);
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequestDto.getUserId(), loginRequestDto.getPassword());
+            log.info("authenticationToken: {}", authenticationToken);
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
+            log.info("authentication: {}", authentication);
 
             PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
             log.info("로그인 완료: {}", principalDetails.getUser().getUserId());
+
 
             return authentication;
         } catch (IOException e) {
