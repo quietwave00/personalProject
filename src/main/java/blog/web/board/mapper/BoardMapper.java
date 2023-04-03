@@ -1,50 +1,72 @@
 package blog.web.board.mapper;
 
+import blog.web.board.controller.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import blog.web.board.controller.dto.request.CreateBoardRequestDto;
-import blog.web.board.controller.dto.response.CreateBoardResponseDto;
-import blog.web.board.controller.dto.response.DeleteBoardResponseDto;
-import blog.web.board.controller.dto.response.DetailsBoardResponseDto;
-import blog.web.board.controller.dto.response.UpdateBoardResponseDto;
 import blog.domain.entity.Board;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 
 @Slf4j
 @Component
-@ComponentScan("blog.config")
+//@ComponentScan("blog.config")
 @RequiredArgsConstructor
 public class BoardMapper {
 
-    private final ModelMapper modelMapper;
 
-    public Board toEntity(CreateBoardRequestDto createBoardRequestDto) {
-        return modelMapper.map(createBoardRequestDto, Board.class);
+    public Board toEntity(CreateBoardRequestDto dto) {
+        return Board.builder()
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .build();
     }
 
     public CreateBoardResponseDto toCreateDto(Board board) {
-        return modelMapper.map(board, CreateBoardResponseDto.class);
+        return CreateBoardResponseDto.builder()
+                .title(board.getTitle())
+                .content(board.getContent())
+                .userId(board.getUser().getUserId())
+                .createdDate(board.getCreatedDate().toLocalDateTime())
+                .build();
     }
 
     public UpdateBoardResponseDto toUpdateDto(Board board) {
-        return modelMapper.map(board, UpdateBoardResponseDto.class);
+        return UpdateBoardResponseDto.builder()
+                .title(board.getTitle())
+                .content(board.getContent())
+                .userId(board.getUser().getUserId())
+                .modifiedDate(board.getModifiedDate())
+                .build();
     }
 
     public DetailsBoardResponseDto toDetailsDto(Board board) {
-        return modelMapper.map(board, DetailsBoardResponseDto.class);
+        return DetailsBoardResponseDto.builder()
+                .title(board.getTitle())
+                .content(board.getContent())
+                .userId(board.getUser().getUserId())
+                .createdDate(board.getCreatedDate().toLocalDateTime())
+                .count(board.getCount())
+                .build();
     }
 
     public DeleteBoardResponseDto toDeleteDto(Board board) {
-        return modelMapper.map(board, DeleteBoardResponseDto.class);
+        return DeleteBoardResponseDto.builder()
+                .boardNo(board.getBoardNo())
+                .build();
     }
 
-
-
-
-
-
-
+    public BoardListResponseDto toBoardListDto(Board board) {
+        return BoardListResponseDto.builder()
+                .boardNo(board.getBoardNo())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .createdDate(board.getCreatedDate().toLocalDateTime())
+                .nickname(board.getUser().getNickname())
+                .build();
+    }
 }

@@ -1,5 +1,6 @@
 package blog.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
@@ -42,13 +43,15 @@ public class Board {
     private Integer count;
 
     @OneToMany(mappedBy = "board")
+    @JsonBackReference
     private List<Comment> commentList = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_no")
     private User user;
 
     @OneToMany(mappedBy = "board")
+    @JsonBackReference
     private List<File> file = new ArrayList<>();
 
 

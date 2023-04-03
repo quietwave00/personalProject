@@ -14,5 +14,5 @@ public interface BoardService {
 
     DeleteBoardResponseDto delete(DeleteBoardRequestDto deleteBoardRequestDto);
 
-    SelectBoardResponseDto selectAll();
+    Result<?> selectAll();
 }

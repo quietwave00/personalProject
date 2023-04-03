@@ -50,8 +50,9 @@ public class BoardController {
 
     //글 전체 조회
     @GetMapping("/boards")
-    public ApiResult<SelectBoardResponseDto> selectAll() {
-        SelectBoardResponseDto selectBoardResponseDto = boardService.selectAll();
+    public ApiResult<Result<?>> selectAll() {
+        Result<?> selectBoardResponseDto = boardService.selectAll();
+        log.info("selectBoardResponseDto: " + selectBoardResponseDto.toString());
         return ApiUtils.success(selectBoardResponseDto);
     }
 

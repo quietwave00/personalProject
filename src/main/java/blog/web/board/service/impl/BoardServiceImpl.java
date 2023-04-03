@@ -1,5 +1,6 @@
 package blog.web.board.service.impl;
 
+import blog.domain.entity.Status;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,9 @@ import blog.utils.dto.ApiError;
 import blog.web.board.controller.dto.request.CreateBoardRequestDto;
 import blog.web.board.repository.BoardRepository;
 import blog.web.board.service.BoardService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -68,8 +72,13 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public SelectBoardResponseDto selectAll() {
-
-        return null;
+    public Result<?> selectAll() {
+        List<Board> boardList = boardRepository.findByStatusOrderByBoardNoDesc(Status.Y);
+        List<BoardListResponseDto> boardListResponseDtoList = new ArrayList<>();
+        for (Board board : boardList) {
+            BoardListResponseDto boardListResponseDto = mapper.toBoardListDto(board);
+            boardListResponseDtoList.add(boardListResponseDto);
+        }
+        return new Result<>(boardListResponseDtoList);
     }
 }
