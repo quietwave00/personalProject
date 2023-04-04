@@ -3,19 +3,14 @@ package blog.web.board.mapper;
 import blog.web.board.controller.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import blog.web.board.controller.dto.request.CreateBoardRequestDto;
 import blog.domain.entity.Board;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 
 
 @Slf4j
 @Component
-//@ComponentScan("blog.config")
-@RequiredArgsConstructor
 public class BoardMapper {
 
 

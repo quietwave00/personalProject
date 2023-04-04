@@ -43,6 +43,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Board> board = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comment = new ArrayList<>();
+
     @Enumerated(EnumType.STRING)
     private Status status;
 

@@ -35,9 +35,7 @@ public class BoardServiceImpl implements BoardService {
     public CreateBoardResponseDto create(CreateBoardRequestDto createBoardRequestDto) {
         User findUser = userRepository.findByUserId(createBoardRequestDto.getUserId())
                 .orElseThrow(() -> new ApiError(ErrorCode.USER_ID_NOT_FOUND));
-        log.info("toEntity: {}", mapper.toEntity(createBoardRequestDto).getBoardNo());
         Board board = boardRepository.save(mapper.toEntity(createBoardRequestDto).addUser(findUser));
-        log.info("toDto: {}", mapper.toCreateDto(board));
         return mapper.toCreateDto(board);
     }
 

@@ -1,9 +1,7 @@
 package blog.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -12,6 +10,7 @@ import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
 
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -23,7 +22,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentNo;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_no")
     private User user;
 
@@ -36,16 +35,32 @@ public class Comment {
     @OneToMany(mappedBy = "parent")
     private List<Comment> child = new ArrayList<>();
 
+    @CreationTimestamp
     private Timestamp createdDate;
 
     private Timestamp modifiedDate;
 
     private Status status;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "board_no")
     private Board board;
 
+    @PrePersist
+    public void prePersist(){
+        this.status = this.status == null ? Status.Y : this.status;
+    }
+
+    //==연관관계 메소드==
+    public void addBoard(Board board) {
+        this.board = board;
+        board.getCommentList().add(this);
+    }
+
+    public void addUser(User user) {
+        this.user = user;
+        user.getComment().add(this);
+    }
 
 
 

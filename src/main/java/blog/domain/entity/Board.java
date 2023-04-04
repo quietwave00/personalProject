@@ -43,7 +43,6 @@ public class Board {
     private Integer count;
 
     @OneToMany(mappedBy = "board")
-    @JsonBackReference
     private List<Comment> commentList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -51,7 +50,6 @@ public class Board {
     private User user;
 
     @OneToMany(mappedBy = "board")
-    @JsonBackReference
     private List<File> file = new ArrayList<>();
 
 
