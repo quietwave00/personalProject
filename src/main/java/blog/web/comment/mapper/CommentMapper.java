@@ -3,6 +3,7 @@ package blog.web.comment.mapper;
 import blog.domain.entity.Comment;
 import blog.web.comment.controller.dto.request.CreateCommentRequestDto;
 import blog.web.comment.controller.dto.response.CreateCommentResponseDto;
+import blog.web.comment.controller.dto.response.DeleteCommentResponseDto;
 import blog.web.comment.controller.dto.response.UpdateCommentResponseDto;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +28,12 @@ public class CommentMapper {
         return UpdateCommentResponseDto.builder()
                 .content(updateComment.getContent())
                 .modifiedDate(updateComment.getModifiedDate())
+                .build();
+    }
+
+    public DeleteCommentResponseDto toDeleteDto(Comment comment) {
+        return DeleteCommentResponseDto.builder()
+                .commentNo(comment.getCommentNo())
                 .build();
     }
 }

@@ -60,7 +60,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public DeleteBoardResponseDto delete(DeleteBoardRequestDto deleteBoardRequestDto) {
         Board findBoard = findBoard(deleteBoardRequestDto.getBoardNo());
-        findBoard.deleteBoard(findBoard);
+        findBoard.deleteBoard();
         boardRepository.save(findBoard);
         return mapper.toDeleteDto(findBoard);
     }

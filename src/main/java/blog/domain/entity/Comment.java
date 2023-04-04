@@ -41,6 +41,7 @@ public class Comment {
 
     private LocalDateTime modifiedDate;
 
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     @ManyToOne(fetch = LAZY)
@@ -68,6 +69,11 @@ public class Comment {
     public void update(String content) {
         this.content = content;
         this.modifiedDate = LocalDateTime.now();
+    }
+
+    //댓글 삭제
+    public void delete() {
+        this.status = Status.N;
     }
 
 

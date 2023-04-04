@@ -7,8 +7,10 @@ import blog.exception.ErrorCode;
 import blog.utils.dto.ApiError;
 import blog.web.board.repository.BoardRepository;
 import blog.web.comment.controller.dto.request.CreateCommentRequestDto;
+import blog.web.comment.controller.dto.request.DeleteCommentRequestDto;
 import blog.web.comment.controller.dto.request.UpdateCommentRequestDto;
 import blog.web.comment.controller.dto.response.CreateCommentResponseDto;
+import blog.web.comment.controller.dto.response.DeleteCommentResponseDto;
 import blog.web.comment.controller.dto.response.UpdateCommentResponseDto;
 import blog.web.comment.mapper.CommentMapper;
 import blog.web.comment.repository.CommentRepository;
@@ -49,6 +51,13 @@ public class CommentServiceImpl implements CommentService {
         return mapper.toUpdateDto(updateComment);
     }
 
+    @Override
+    public DeleteCommentResponseDto delete(DeleteCommentRequestDto deleteCommentRequestDto) {
+        Comment findComment = findComment(deleteCommentRequestDto.getCommentNo());
+        findComment.delete();
+        commentRepository.save(findComment);
+        return mapper.toDeleteDto(findComment);
+    }
 
 
     //단일 메소드

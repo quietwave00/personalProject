@@ -91,7 +91,7 @@ public class Board {
     }
 
     //게시글 삭제
-    public void deleteBoard(Board findBoard) {
+    public void deleteBoard() {
         this.status = Status.N;
     }
 
