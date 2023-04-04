@@ -7,7 +7,9 @@ import blog.exception.ErrorCode;
 import blog.utils.dto.ApiError;
 import blog.web.board.repository.BoardRepository;
 import blog.web.comment.controller.dto.request.CreateCommentRequestDto;
+import blog.web.comment.controller.dto.request.UpdateCommentRequestDto;
 import blog.web.comment.controller.dto.response.CreateCommentResponseDto;
+import blog.web.comment.controller.dto.response.UpdateCommentResponseDto;
 import blog.web.comment.mapper.CommentMapper;
 import blog.web.comment.repository.CommentRepository;
 import blog.web.comment.service.CommentService;
@@ -22,15 +24,13 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
-    private final CommentMapper mapper;
     private final UserRepository userRepository;
+    private final CommentMapper mapper;
 
     @Override
     public CreateCommentResponseDto create(CreateCommentRequestDto createCommentRequestDto) {
-        Board findBoard = boardRepository.findByBoardNo(createCommentRequestDto.getBoardNo())
-                .orElseThrow(() -> new ApiError(ErrorCode.BOARD_NOT_FOUND));
-        User findUser = userRepository.findByUserId(createCommentRequestDto.getUserId())
-                .orElseThrow(() -> new ApiError(ErrorCode.USER_ID_NOT_FOUND));
+        Board findBoard = findBoard(createCommentRequestDto.getBoardNo());
+        User findUser = findUser(createCommentRequestDto.getUserId());
 
         Comment beforeComment = mapper.toEntity(createCommentRequestDto);
         beforeComment.addBoard(findBoard);
@@ -40,4 +40,32 @@ public class CommentServiceImpl implements CommentService {
 
         return mapper.toCreateDto(afterComment);
     }
+
+    @Override
+    public UpdateCommentResponseDto update(UpdateCommentRequestDto updateCommentRequestDto) {
+        Comment findComment = findComment(updateCommentRequestDto.getCommentNo());
+        findComment.update(updateCommentRequestDto.getContent());
+        Comment updateComment = commentRepository.save(findComment);
+        return mapper.toUpdateDto(updateComment);
+    }
+
+
+
+    //단일 메소드
+    Board findBoard(Long boardNo) {
+        return boardRepository.findByBoardNo(boardNo)
+                .orElseThrow(() -> new ApiError(ErrorCode.BOARD_NOT_FOUND));
+    }
+
+    User findUser(String userId) {
+        return userRepository.findByUserId(userId)
+                .orElseThrow(() -> new ApiError(ErrorCode.USER_ID_NOT_FOUND));
+    }
+
+    Comment findComment(Long commentNo) {
+        return commentRepository.findByCommentNo(commentNo)
+                .orElseThrow(() -> new ApiError(ErrorCode.COMMENT_NOT_FOUND));
+    }
+
+
 }

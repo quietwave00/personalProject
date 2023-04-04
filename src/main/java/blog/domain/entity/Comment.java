@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class Comment {
     @CreationTimestamp
     private Timestamp createdDate;
 
-    private Timestamp modifiedDate;
+    private LocalDateTime modifiedDate;
 
     private Status status;
 
@@ -60,6 +61,13 @@ public class Comment {
     public void addUser(User user) {
         this.user = user;
         user.getComment().add(this);
+    }
+
+    //--비즈니스 로직--
+    //댓글 수정
+    public void update(String content) {
+        this.content = content;
+        this.modifiedDate = LocalDateTime.now();
     }
 
 

@@ -96,41 +96,6 @@ public class Board {
     }
 
 
-    //--toDto--
-    public static CreateBoardResponseDto toCreateDto(Board board) {
-        return CreateBoardResponseDto.builder()
-                .title(board.getTitle())
-                .content(board.getContent())
-                .userId(board.getUser().getUserId())
-                .createdDate(board.getCreatedDate().toLocalDateTime())
-                .build();
-    }
-
-    public static UpdateBoardResponseDto toUpdateDto(Board board) {
-        return UpdateBoardResponseDto.builder()
-                .title(board.getTitle())
-                .content(board.getContent())
-                .userId(board.getUser().getUserId())
-                .modifiedDate(board.getModifiedDate())
-                .build();
-    }
-
-    public static DetailsBoardResponseDto toDetailDto(Board board) {
-        return DetailsBoardResponseDto.builder()
-                .title(board.getTitle())
-                .content(board.getContent())
-                .userId(board.getUser().getUserId())
-                .createdDate(board.getCreatedDate().toLocalDateTime())
-                .count(board.getCount())
-                .build();
-
-    }
-
-    public static DeleteBoardResponseDto toDeleteDto(Board board) {
-        return DeleteBoardResponseDto.builder()
-                .boardNo(board.getBoardNo())
-                .build();
-    }
 
     @Override
     public String toString() {

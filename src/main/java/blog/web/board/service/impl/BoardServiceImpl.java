@@ -33,16 +33,14 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public CreateBoardResponseDto create(CreateBoardRequestDto createBoardRequestDto) {
-        User findUser = userRepository.findByUserId(createBoardRequestDto.getUserId())
-                .orElseThrow(() -> new ApiError(ErrorCode.USER_ID_NOT_FOUND));
+        User findUser = findUser(createBoardRequestDto.getUserId());
         Board board = boardRepository.save(mapper.toEntity(createBoardRequestDto).addUser(findUser));
         return mapper.toCreateDto(board);
     }
 
     @Override
     public UpdateBoardResponseDto update(UpdateBoardRequestDto updateBoardRequestDto) {
-        Board findBoard = boardRepository.findByBoardNo(updateBoardRequestDto.getBoardNo())
-                .orElseThrow(() -> new ApiError(ErrorCode.BOARD_NOT_FOUND));
+        Board findBoard = findBoard(updateBoardRequestDto.getBoardNo());
         findBoard.update(updateBoardRequestDto.getTitle(), updateBoardRequestDto.getContent());
         Board updateBoard = boardRepository.save(findBoard);
         return mapper.toUpdateDto(updateBoard);
@@ -50,8 +48,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public DetailsBoardResponseDto detail(Long boardNo, String userId) {
-        Board findBoard = boardRepository.findByBoardNo(boardNo)
-                .orElseThrow(() -> new ApiError(ErrorCode.BOARD_NOT_FOUND));
+        Board findBoard = findBoard(boardNo);
         //조회수
         if(!findBoard.getUser().getUserId().equals(userId)) {
             findBoard.updateCount();
@@ -62,8 +59,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public DeleteBoardResponseDto delete(DeleteBoardRequestDto deleteBoardRequestDto) {
-        Board findBoard = boardRepository.findByBoardNo(deleteBoardRequestDto.getBoardNo())
-                .orElseThrow(() -> new ApiError(ErrorCode.BOARD_NOT_FOUND));
+        Board findBoard = findBoard(deleteBoardRequestDto.getBoardNo());
         findBoard.deleteBoard(findBoard);
         boardRepository.save(findBoard);
         return mapper.toDeleteDto(findBoard);
@@ -78,5 +74,17 @@ public class BoardServiceImpl implements BoardService {
             boardListResponseDtoList.add(boardListResponseDto);
         }
         return new Result<>(boardListResponseDtoList);
+    }
+
+
+    //단일 메소드
+    Board findBoard(Long boardNo) {
+        return boardRepository.findByBoardNo(boardNo)
+                .orElseThrow(() -> new ApiError(ErrorCode.BOARD_NOT_FOUND));
+    }
+
+    User findUser(String userId) {
+        return userRepository.findByUserId(userId)
+                .orElseThrow(() -> new ApiError(ErrorCode.USER_ID_NOT_FOUND));
     }
 }
