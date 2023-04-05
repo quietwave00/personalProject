@@ -5,12 +5,15 @@ import blog.utils.dto.ApiResult;
 import blog.web.comment.controller.dto.request.CreateCommentRequestDto;
 import blog.web.comment.controller.dto.request.DeleteCommentRequestDto;
 import blog.web.comment.controller.dto.request.UpdateCommentRequestDto;
+import blog.web.comment.controller.dto.response.CommentListResponseDto;
 import blog.web.comment.controller.dto.response.CreateCommentResponseDto;
 import blog.web.comment.controller.dto.response.DeleteCommentResponseDto;
 import blog.web.comment.controller.dto.response.UpdateCommentResponseDto;
 import blog.web.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -39,6 +42,13 @@ public class CommentController {
     public ApiResult<DeleteCommentResponseDto> delete(@RequestBody DeleteCommentRequestDto deleteCommentRequestDto) {
         DeleteCommentResponseDto deleteCommentResponseDto = commentService.delete(deleteCommentRequestDto);
         return ApiUtils.success(deleteCommentResponseDto);
+    }
+
+    //댓글 조회
+    @GetMapping("/comments/{boardNo}")
+    public ApiResult<List<CommentListResponseDto>> select(@PathVariable("boardNo") Long boardNo) {
+        List<CommentListResponseDto> commentListResponseDto = commentService.select(boardNo);
+        return ApiUtils.success(commentListResponseDto);
     }
 
 }

@@ -2,6 +2,7 @@ package blog.web.comment.service.impl;
 
 import blog.domain.entity.Board;
 import blog.domain.entity.Comment;
+import blog.domain.entity.Status;
 import blog.domain.entity.User;
 import blog.exception.ErrorCode;
 import blog.utils.dto.ApiError;
@@ -9,6 +10,7 @@ import blog.web.board.repository.BoardRepository;
 import blog.web.comment.controller.dto.request.CreateCommentRequestDto;
 import blog.web.comment.controller.dto.request.DeleteCommentRequestDto;
 import blog.web.comment.controller.dto.request.UpdateCommentRequestDto;
+import blog.web.comment.controller.dto.response.CommentListResponseDto;
 import blog.web.comment.controller.dto.response.CreateCommentResponseDto;
 import blog.web.comment.controller.dto.response.DeleteCommentResponseDto;
 import blog.web.comment.controller.dto.response.UpdateCommentResponseDto;
@@ -18,6 +20,9 @@ import blog.web.comment.service.CommentService;
 import blog.web.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -57,6 +62,17 @@ public class CommentServiceImpl implements CommentService {
         findComment.delete();
         commentRepository.save(findComment);
         return mapper.toDeleteDto(findComment);
+    }
+
+    @Override
+    public List<CommentListResponseDto> select(Long boardNo) {
+        List<Comment> findCommentList = commentRepository.findByBoardAndStatus(findBoard(boardNo), Status.Y);
+        List<CommentListResponseDto> commentListResponseDtoList = new ArrayList<>();
+        for(Comment comment : findCommentList) {
+            CommentListResponseDto commentListResponseDto = mapper.toCommentListDto(comment);
+            commentListResponseDtoList.add(commentListResponseDto);
+        }
+        return commentListResponseDtoList;
     }
 
 

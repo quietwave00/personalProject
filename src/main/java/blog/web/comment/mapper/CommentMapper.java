@@ -2,6 +2,7 @@ package blog.web.comment.mapper;
 
 import blog.domain.entity.Comment;
 import blog.web.comment.controller.dto.request.CreateCommentRequestDto;
+import blog.web.comment.controller.dto.response.CommentListResponseDto;
 import blog.web.comment.controller.dto.response.CreateCommentResponseDto;
 import blog.web.comment.controller.dto.response.DeleteCommentResponseDto;
 import blog.web.comment.controller.dto.response.UpdateCommentResponseDto;
@@ -34,6 +35,15 @@ public class CommentMapper {
     public DeleteCommentResponseDto toDeleteDto(Comment comment) {
         return DeleteCommentResponseDto.builder()
                 .commentNo(comment.getCommentNo())
+                .build();
+    }
+
+    public CommentListResponseDto toCommentListDto(Comment comment) {
+        return CommentListResponseDto.builder()
+                .commentNo(comment.getCommentNo())
+                .userId(comment.getUser().getUserId())
+                .content(comment.getContent())
+                .createdDate(comment.getCreatedDate().toLocalDateTime())
                 .build();
     }
 }
