@@ -50,7 +50,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
             log.info("로그인 완료: {}", principalDetails.getUser().getUserId());
 
-
             return authentication;
         } catch (IOException e) {
             throw new RuntimeException(e);
