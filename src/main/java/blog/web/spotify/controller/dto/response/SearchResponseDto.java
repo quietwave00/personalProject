@@ -1,5 +1,6 @@
 package blog.web.spotify.controller.dto.response;
 
+import com.wrapper.spotify.model_objects.specification.Track;
 import lombok.Builder;
 import lombok.Getter;
 
