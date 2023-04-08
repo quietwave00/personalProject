@@ -27,18 +27,24 @@ const showTrackList = (trackList) => {
 
         document.getElementById('track-area').innerHTML += 
             `
-            <div id = "title-area">
-                <span id = "title">${title}</span>
-            </div>
-            <div id = "artist-area">
-                <span id = "artist">${artist}</span>
-            </div>
-            <div id = "album-area">
-                <span id = "album">${album}</span>
-            </div>
-            <div id = "image-area">
-                <img id = "image" src = "${imageUrl}" style = "width: 40%;"></img>
-            </div>      
+                <div class = "row track">
+                    <div class = "col-5">
+                        <img src = "${imageUrl}" style = "width: 60%">
+                    </div>
+                    <div class = "col-7">
+                        <div class = "row">
+                            <div class = "col-7">
+                                <span class = "title">${title}</span>
+                            </div>
+                            <div class = "col-7">
+                                <span style = "color: gray; font-weight: bold;">Artist</span> <span class = "artist">${artist}</span>
+                            </div>
+                            <div class = "col-7">
+                            <span style = "color: gray; font-weight: bold;">Album</span> <span class = "album">${album}</span>
+                            </div>
+                        </div>
+                    </div>        
+                </div> 
             `;
         
         
