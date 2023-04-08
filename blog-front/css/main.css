@@ -49,16 +49,26 @@
     -webkit-overflow-scrolling: touch;
   }
 
-#search {
+#search-area {
+    position: absolute;
+    top: 20%;
+    left: 25%;
+}
+
+#search-input {
     width: 600px;
     height: 70px;
     border-radius: 20px;
     font-size: 35px;
     padding: 5px;
+    display: inline-block;
 }
 
-#search-box {
-    margin-top: 50px;
-    text-align: center;
-    
+#search-button {
+    margin-left: 10px;
+    margin-bottom: 20px;
+    width: 100px;
+    height: 60px;
+    display: inline-block;
+    display: inline-block;
 }
