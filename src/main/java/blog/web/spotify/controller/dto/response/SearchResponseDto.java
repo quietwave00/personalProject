@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 public class SearchResponseDto {
     private String artistName;
+    private String title;
     private String albumName;
     private String imageUrl;
 }

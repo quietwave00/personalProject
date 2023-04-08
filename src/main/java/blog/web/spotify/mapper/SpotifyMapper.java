@@ -10,9 +10,10 @@ import java.util.Arrays;
 @Component
 public class SpotifyMapper {
 
-    public SearchResponseDto toSearchDto(String artistName, String albumName, String imageUrl) {
+    public SearchResponseDto toSearchDto(String artistName, String title, String albumName, String imageUrl) {
         return SearchResponseDto.builder()
                 .artistName(artistName)
+                .title(title)
                 .albumName(albumName)
                 .imageUrl(imageUrl)
                 .build();

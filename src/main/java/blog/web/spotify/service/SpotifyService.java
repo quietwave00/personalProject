@@ -24,17 +24,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SpotifyService {
 
+    private final SpotifyMapper mapper;
+
     SpotifyApi spotifyApi = new SpotifyApi.Builder()
             .setAccessToken(SpotifyConfig.accessToken())
             .build();
 
-    private final SpotifyMapper mapper;
-    public List<SearchResponseDto> search(String keyword) {
 
-        String albumName = "";
-        String artistName = "";
-        String imageUrl = "";
+    public List<SearchResponseDto> search(String keyword) {
         List <SearchResponseDto> searchResponseDtoList = new ArrayList<>();
+
         try {
             SearchTracksRequest searchTrackRequest = spotifyApi.searchTracks(keyword)
                     .limit(10)
@@ -43,26 +42,20 @@ public class SpotifyService {
             Paging<Track> searchResult = searchTrackRequest.execute();
             Track[] tracks = searchResult.getItems();
 
-
             for (Track track : tracks) {
+                String title = track.getName();
+
                 AlbumSimplified album = track.getAlbum();
-
-                ArtistSimplified[] artistArray = album.getArtists();
-                artistName = artistArray[0].getName();
-                System.out.println("artist: " + artistName);
-
-                Image[] imageArray = album.getImages();
-                for (Image image : imageArray) {
-                    imageUrl = imageArray[0].getUrl();
-                    System.out.println("imageUrl: " + imageUrl);
-                }
+                ArtistSimplified[] artists = album.getArtists();
+                String artistName = artists[0].getName();
 
 
-                albumName = album.getName();
-                System.out.println("albumName: " + albumName);
+                Image[] images = album.getImages();
+                String imageUrl = (images.length > 0) ? images[0].getUrl() : "NO_IMAGE";
 
-                searchResponseDtoList.add(mapper.toSearchDto(artistName, albumName, imageUrl));
+                String albumName = album.getName();
 
+                searchResponseDtoList.add(mapper.toSearchDto(artistName, title, albumName, imageUrl));
             }
 
         } catch (IOException | SpotifyWebApiException | ParseException e) {
