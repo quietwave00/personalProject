@@ -16,11 +16,10 @@ public class SpotifyConfig {
         private static final String CLIENT_SECRET = "646cc8380b194374bf0e75eecfbf63f8";
         private static final com.wrapper.spotify.SpotifyApi spotifyApi = new SpotifyApi.Builder().setClientId(CLIENT_ID).setClientSecret(CLIENT_SECRET).build();
 
-        public static String accesstoken() {
+        public static String accessToken() {
             ClientCredentialsRequest clientCredentialsRequest = spotifyApi.clientCredentials().build();
             try {
                 final ClientCredentials clientCredentials = clientCredentialsRequest.execute();
-                // Set access token for further "spotifyApi" object usage
                 spotifyApi.setAccessToken(clientCredentials.getAccessToken());
                 return spotifyApi.getAccessToken();
 
@@ -29,5 +28,8 @@ public class SpotifyConfig {
                 return "error";
             }
         }
+
+
+
 
 }

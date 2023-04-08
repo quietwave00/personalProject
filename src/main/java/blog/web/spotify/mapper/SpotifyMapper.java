@@ -10,12 +10,11 @@ import java.util.Arrays;
 @Component
 public class SpotifyMapper {
 
-    public SearchResponseDto toSearchDto(Track track) {
+    public SearchResponseDto toSearchDto(String artistName, String albumName, String imageUrl) {
         return SearchResponseDto.builder()
-                .artist(track.getArtists().toString())
-                .name(track.getName())
-                .album(track.getAlbum().toString())
-                .imageUrl(track.getPreviewUrl())
+                .artistName(artistName)
+                .albumName(albumName)
+                .imageUrl(imageUrl)
                 .build();
     }
 }
