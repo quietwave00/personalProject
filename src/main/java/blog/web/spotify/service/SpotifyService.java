@@ -32,7 +32,6 @@ public class SpotifyService {
 
     private final SpotifyMapper mapper;
 
-
     public List<SearchResponseDto> search(String keyword) {
         SpotifyApi spotifyApi = getSpotifyApi();
         List <SearchResponseDto> searchResponseDtoList = new ArrayList<>();
@@ -46,22 +45,9 @@ public class SpotifyService {
             Track[] tracks = searchResult.getItems();
 
             for (Track track : tracks) {
-                String trackId = track.getId();
-                String title = track.getName();
-
-                AlbumSimplified album = track.getAlbum();
-                ArtistSimplified[] artists = album.getArtists();
-                String artistName = artists[0].getName();
-
-
-                Image[] images = album.getImages();
-                String imageUrl = (images.length > 0) ? images[0].getUrl() : "NO_IMAGE";
-
-                String albumName = album.getName();
-
-                searchResponseDtoList.add(mapper.toSearchDto(trackId, artistName, title, albumName, imageUrl));
+                ConcurrentHashMap<String, String> trackData = getTrackData(track);
+                searchResponseDtoList.add(mapper.toSearchDto(track.getId(), trackData.get("artistName"), trackData.get("title"), trackData.get("albumName"), trackData.get("imageUrl")));
             }
-
         } catch (IOException | SpotifyWebApiException | ParseException e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -77,10 +63,6 @@ public class SpotifyService {
 
         return mapper.toDetailsDto(searchTrackData.get("artistName"), searchTrackData.get("title"), searchTrackData.get("albumName"), searchTrackData.get("imageUrl"));
     }
-
-
-
-
 
 
 

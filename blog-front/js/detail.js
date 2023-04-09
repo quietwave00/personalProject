@@ -26,7 +26,7 @@ const showTrack = (track) => {
             `
                 <div class = "row track">
                     <div class = "col-5">
-                        <img src = "${imageUrl}" style = "width: 60%">
+                        <img src = "${imageUrl}" style = "width: 60%; margin-left: 100px;">
                     </div>
                     <div class = "col-7">
                         <div class = "row">
@@ -37,12 +37,19 @@ const showTrack = (track) => {
                                 <span style = "color: gray; font-weight: bold;">Artist</span> <span class = "artist">${artist}</span>
                             </div>
                             <div class = "col-7">
-                            <span style = "color: gray; font-weight: bold;">Album</span> <span class = "album">${album}</span>
+                                <span style = "color: gray; font-weight: bold;">Album</span> <span class = "album">${album}</span>
+                            </div>
+                            <div class = "col-7">
+                                <input type = "button" class="btn btn-dark" value = "write" id = "modal-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
                             </div>
                         </div>
                     </div>        
                 </div> 
             `;
-
-
 }
+
+document.getElementById('write-button').addEventListener('click', function() {
+    let content = document.getElementById('board-input').value;
+    
+
+});
