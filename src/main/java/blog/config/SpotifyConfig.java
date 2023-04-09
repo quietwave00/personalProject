@@ -8,8 +8,6 @@ import com.wrapper.spotify.requests.authorization.client_credentials.ClientCrede
 import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
-
-@Configuration
 public class SpotifyConfig {
 
         private static final String CLIENT_ID = "c7664d24897f4069afbb1d61090101fc";

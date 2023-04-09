@@ -1,10 +1,8 @@
+window.onload = () => {
+    const trackId = new URLSearchParams(window.location.search).get('trackId');
 
-window.onload = function() {
-    //Track Select
-    const keyword = new URLSearchParams(window.location.search).get('keyword');
-
-    fetch('http://localhost:8080/musics/' + keyword,{
-        method:"GET",
+    fetch('http://localhost:8080/musics/board/' + trackId, {
+        method: "GET",
         headers: {
             "Content-Type": "application/json"
         }
@@ -12,24 +10,21 @@ window.onload = function() {
     .then((res) => res.json())
     .then(res => {
         if(res.success == true) {
-            console.log("track Select Success");
-            showTrackList(res.response);
+            console.log("moved to track Success");
+            showTrack(res.response);
         }
     })
 }
 
-const showTrackList = (trackList) => {
-    for(let track of trackList) {
-        let trackId = track.trackId;
-        let title = track.title;
-        let artist = track.artistName;
-        let album = track.albumName;
-        let imageUrl = track.imageUrl;
+const showTrack = (track) => {
+    let title = track.title;
+    let artist = track.artistName;
+    let album = track.albumName;
+    let imageUrl = track.imageUrl;
 
-        document.getElementById('track-area').innerHTML += 
+    document.getElementById('track-area').innerHTML += 
             `
                 <div class = "row track">
-                    <input class = "track-id" type = "hidden" value = ${trackId}>
                     <div class = "col-5">
                         <img src = "${imageUrl}" style = "width: 60%">
                     </div>
@@ -48,20 +43,6 @@ const showTrackList = (trackList) => {
                     </div>        
                 </div> 
             `;
-    }
-    moveDetails();
-};
 
-const moveDetails = () => {
-    const trackElements = document.getElementsByClassName('track');
 
-    for(let element of trackElements) {
-        element.addEventListener('click', (e) => {
-            const trackId = e.currentTarget.querySelector('.track-id').value;
-            window.location.href = `detail.html?trackId=${trackId}`;
-        })
-    }
 }
-
-
-

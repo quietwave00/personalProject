@@ -59,9 +59,15 @@
     width: 600px;
     height: 70px;
     border-radius: 20px;
-    font-size: 35px;
+    font-size: 30px;
     padding: 5px;
     display: inline-block;
+}
+
+#search-input:focus {
+  outline: auto;
+  border-color: #ccc;
+  box-shadow: none;
 }
 
 #search-button {
@@ -69,6 +75,5 @@
     margin-bottom: 20px;
     width: 100px;
     height: 60px;
-    display: inline-block;
     display: inline-block;
 }

@@ -1,0 +1,23 @@
+#track-area {
+    position: absolute;
+    top: 20%;
+    left: 25%;
+}
+
+.track {
+    margin: 20px;
+    padding: 20px;
+}
+
+.track:hover {
+    color: gray;
+    font-style: italic;
+    cursor: pointer;
+}
+
+.title {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+
