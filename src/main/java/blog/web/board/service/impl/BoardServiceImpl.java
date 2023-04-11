@@ -1,6 +1,10 @@
 package blog.web.board.service.impl;
 
+import blog.domain.entity.Hashtag;
 import blog.domain.entity.Status;
+import blog.jwt.UserContextHolder;
+import blog.web.hashtag.mapper.HashtagMapper;
+import blog.web.hashtag.repository.HashtagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,6 +22,7 @@ import blog.web.board.repository.BoardRepository;
 import blog.web.board.service.BoardService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -27,21 +32,27 @@ public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final HashtagRepository hashtagRepository;
     private final BoardMapper mapper;
+    private final HashtagMapper hashtagMapper;
 
 
 
     @Override
     public CreateBoardResponseDto create(CreateBoardRequestDto createBoardRequestDto) {
-        User findUser = findUser(createBoardRequestDto.getUserId());
-        Board board = boardRepository.save(mapper.toEntity(createBoardRequestDto).addUser(findUser));
-        return mapper.toCreateDto(board);
+        User findUser = findUser(UserContextHolder.getUserId());
+        Board beforeBoard = mapper.toEntity(createBoardRequestDto);
+        List<Hashtag> hashtagList = saveHashtag(createBoardRequestDto.getHashtagList());
+        beforeBoard.addUser(findUser);
+        beforeBoard.addHashtag(hashtagList);
+        Board afterBoard = boardRepository.save(beforeBoard);
+        return mapper.toCreateDto(afterBoard);
     }
 
     @Override
     public UpdateBoardResponseDto update(UpdateBoardRequestDto updateBoardRequestDto) {
         Board findBoard = findBoard(updateBoardRequestDto.getBoardNo());
-        findBoard.update(updateBoardRequestDto.getTitle(), updateBoardRequestDto.getContent());
+        findBoard.update(updateBoardRequestDto.getContent());
         Board updateBoard = boardRepository.save(findBoard);
         return mapper.toUpdateDto(updateBoard);
     }
@@ -78,13 +89,24 @@ public class BoardServiceImpl implements BoardService {
 
 
     //단일 메소드
-    Board findBoard(Long boardNo) {
+    private Board findBoard(Long boardNo) {
         return boardRepository.findByBoardNo(boardNo)
                 .orElseThrow(() -> new ApiError(ErrorCode.BOARD_NOT_FOUND));
     }
 
-    User findUser(String userId) {
+    private User findUser(String userId) {
         return userRepository.findByUserId(userId)
                 .orElseThrow(() -> new ApiError(ErrorCode.USER_ID_NOT_FOUND));
     }
+
+
+    private List<Hashtag> saveHashtag(List<String> hashtagStrList) {
+        List<Hashtag> hashtagList = new ArrayList<>();
+        for(String hashtagStr : hashtagStrList) {
+            Hashtag hashtag = hashtagRepository.save(hashtagMapper.toEntity(hashtagStr));
+            hashtagList.add(hashtag);
+        }
+        return hashtagList;
+    }
+
 }

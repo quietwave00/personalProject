@@ -1,13 +1,8 @@
 package blog.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
-import blog.web.board.controller.dto.response.CreateBoardResponseDto;
-import blog.web.board.controller.dto.response.DeleteBoardResponseDto;
-import blog.web.board.controller.dto.response.DetailsBoardResponseDto;
-import blog.web.board.controller.dto.response.UpdateBoardResponseDto;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -26,8 +21,6 @@ public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long boardNo;
-
-    private String title;
 
     private String content;
 
@@ -52,6 +45,8 @@ public class Board {
     @OneToMany(mappedBy = "board")
     private List<File> file = new ArrayList<>();
 
+    @OneToMany(mappedBy = "board")
+    private List<Hashtag> hashtagList = new ArrayList<>();
 
 
     @PrePersist
@@ -70,17 +65,21 @@ public class Board {
         comment.setBoard(this);
     }
 
-    public Board addUser(User user) {
+    public void addUser(User user) {
         this.user = user;
         user.getBoard().add(this);
+    }
 
-        return this;
+    public void addHashtag(List<Hashtag> hashtagList) {
+        this.hashtagList = hashtagList;
+        for(Hashtag hashtag : hashtagList) {
+            hashtag.setBoard(this);
+        }
     }
 
     //--비즈니스 로직--
     //글 수정
-    public void update(String title, String content) {
-        this.title = title;
+    public void update(String content) {
         this.content = content;
         this.modifiedDate = LocalDateTime.now();
     }
@@ -101,7 +100,6 @@ public class Board {
     public String toString() {
         return "Board{" +
                 "boardNo=" + boardNo +
-                ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", createdDate=" + createdDate +
                 ", modifiedDate=" + modifiedDate +
