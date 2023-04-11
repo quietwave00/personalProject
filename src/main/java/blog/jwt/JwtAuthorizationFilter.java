@@ -14,6 +14,7 @@ import blog.auth.PrincipalDetails;
 import blog.domain.entity.User;
 import blog.exception.ErrorCode;
 import blog.web.user.repository.UserRepository;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -39,7 +40,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
       String jwtHeader = request.getHeader("Authorization");
 
       //헤더 확인
-      if(jwtHeader == null || !jwtHeader.startsWith("Bearer")) {
+      if(jwtHeader == null || !jwtHeader.startsWith("Bearer ")) {
+          log.info("token: {}", jwtHeader);
           log.info("header 오류");
           chain.doFilter(request, response);
           return;
@@ -62,6 +64,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             log.info("인증완료");
             chain.doFilter(request, response);
         }
-
     }
+
+
 }

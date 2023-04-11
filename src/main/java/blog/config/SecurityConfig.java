@@ -1,5 +1,7 @@
 package blog.config;
 
+import blog.jwt.JwtSetHolderFilter;
+import blog.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +22,7 @@ public class SecurityConfig {
 
     private final CorsConfig corsConfig;
     private final UserRepository userRepository;
+    private final JwtUtil jwtUtil;
 
 
 
@@ -49,7 +52,8 @@ public class SecurityConfig {
             http
                     .addFilter(corsConfig.corsFilter())
                     .addFilter(new JwtAuthenticationFilter(authenticationManager))
-                    .addFilter(new JwtAuthorizationFilter(authenticationManager, userRepository));
+                    .addFilter(new JwtAuthorizationFilter(authenticationManager, userRepository))
+                    .addFilterAfter(new JwtSetHolderFilter(jwtUtil), JwtAuthorizationFilter.class);
         }
     }
 }
