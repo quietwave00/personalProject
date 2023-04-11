@@ -14,9 +14,8 @@ document.getElementById("submit").addEventListener("click", function() {
     .then(res => {
         if(res.status == 200) {
             console.log("Login Success");
-            const token = res.headers.get("Authorization").split(" ")[1];
-            localStorage.setItem("Authorization", token);
-            console.log(token);
+            localStorage.setItem("Authorization", res.headers.get("Authorization"));
+            console.log(localStorage.getItem("Authorization"));
             location.href = "main.html";
         }
     })

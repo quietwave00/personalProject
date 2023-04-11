@@ -87,3 +87,13 @@ input::-webkit-input-placeholder {
 input:focus::-webkit-input-placeholder {
   color: gray;
 }
+
+#join-button {
+  margin-left: 20px;
+}
+
+#join-button:hover {
+  cursor: pointer;
+  color: white;
+  text-decoration: underline;
+}

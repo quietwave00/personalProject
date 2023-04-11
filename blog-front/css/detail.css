@@ -37,14 +37,28 @@
 }
 
 #tag-input {
-    margin-top: 50px;
-    width: 1000px;
+    margin-top: 30px;
+    width: 200px;
     height: 50px;
     border-radius: 30px;
     border: 1px solid lightgray;
     padding: 13px;
+    resize: none;
+    text-align: center;
 }
 
 #modal-area {
     text-align: center;
+}
+
+
+.hashtag-elements {
+    display: inline-block;
+    margin-top: 30px;
+    margin-right: 10px;
+    background-color: lightgray;
+    border-radius: 10px;
+    padding: 5px;
+    font-size: 30px;
+    font-weight: bold;
 }

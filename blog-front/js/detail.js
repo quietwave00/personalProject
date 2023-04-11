@@ -1,6 +1,7 @@
-window.onload = () => {
-    const trackId = new URLSearchParams(window.location.search).get('trackId');
 
+window.onload = () => {
+    //Track Select
+    const trackId = new URLSearchParams(window.location.search).get('trackId');
     fetch('http://localhost:8080/musics/board/' + trackId, {
         method: "GET",
         headers: {
@@ -48,8 +49,57 @@ const showTrack = (track) => {
             `;
 }
 
+//Hashtag Event
+const hashtagArray = [];
+let enterCount = 0;
+document.getElementById('tag-input').addEventListener('keypress', function(e) {
+    if(e.key === "Enter") {
+        enterCount++;
+        if(enterCount > 5) {
+            alert("you can make only 5 hashtags");
+            this.value= "";
+            e.preventDefault();
+        } else {
+            e.stopPropagation();
+            e.preventDefault();
+            const hashtag = this.value.trim();
+            makeHashtag(hashtag);
+            this.value = "";
+        }
+        
+    }
+});
+
+const makeHashtag = (hashtag) => {
+    document.getElementById('hashtag-container').innerHTML +=
+        `
+            <div class = "hashtag-elements" style = "margin-right: 10px;">#${hashtag}</div>
+
+        `;
+    hashtagArray.push(hashtag);
+    console.log(hashtagArray);
+}
+
+//Write Board
 document.getElementById('write-button').addEventListener('click', function() {
-    let content = document.getElementById('board-input').value;
-    
+    console.log(hashtagArray);
+    fetch('http://localhost:8080/blog/user/boards',{
+        method:"POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": localStorage.getItem('Authorization')
+        },
+        body: JSON.stringify({
+            "content": document.getElementById('board-input').value,
+            "hashtagList": hashtagArray
+        })
+    })
+    .then((res) => res.json())
+    .then(res => {
+        if(res.success == true) {
+            console.log("Write Board Success");
+        }
+    })
+
 
 });
