@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DetailsBoardResponseDto {
-    String title;
     String content;
     String userId;
     LocalDateTime createdDate;

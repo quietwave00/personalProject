@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 @Builder
 public class BoardListResponseDto {
     private Long boardNo;
-    private String title;
     private String content;
     private LocalDateTime createdDate;
     private String nickname;

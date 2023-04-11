@@ -16,14 +16,12 @@ public class BoardMapper {
 
     public Board toEntity(CreateBoardRequestDto dto) {
         return Board.builder()
-                .title(dto.getTitle())
                 .content(dto.getContent())
                 .build();
     }
 
     public CreateBoardResponseDto toCreateDto(Board board) {
         return CreateBoardResponseDto.builder()
-                .title(board.getTitle())
                 .content(board.getContent())
                 .userId(board.getUser().getUserId())
                 .createdDate(board.getCreatedDate().toLocalDateTime())
@@ -32,7 +30,6 @@ public class BoardMapper {
 
     public UpdateBoardResponseDto toUpdateDto(Board board) {
         return UpdateBoardResponseDto.builder()
-                .title(board.getTitle())
                 .content(board.getContent())
                 .userId(board.getUser().getUserId())
                 .modifiedDate(board.getModifiedDate())
@@ -41,7 +38,6 @@ public class BoardMapper {
 
     public DetailsBoardResponseDto toDetailsDto(Board board) {
         return DetailsBoardResponseDto.builder()
-                .title(board.getTitle())
                 .content(board.getContent())
                 .userId(board.getUser().getUserId())
                 .createdDate(board.getCreatedDate().toLocalDateTime())
@@ -58,7 +54,6 @@ public class BoardMapper {
     public BoardListResponseDto toBoardListDto(Board board) {
         return BoardListResponseDto.builder()
                 .boardNo(board.getBoardNo())
-                .title(board.getTitle())
                 .content(board.getContent())
                 .createdDate(board.getCreatedDate().toLocalDateTime())
                 .nickname(board.getUser().getNickname())
