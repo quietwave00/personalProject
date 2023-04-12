@@ -1,7 +1,7 @@
 
+const trackId = new URLSearchParams(window.location.search).get('trackId');
 window.onload = () => {
-    //Track Select
-    const trackId = new URLSearchParams(window.location.search).get('trackId');
+    //Select Track
     fetch('http://localhost:8080/musics/board/' + trackId, {
         method: "GET",
         headers: {
@@ -13,6 +13,22 @@ window.onload = () => {
         if(res.success == true) {
             console.log("moved to track Success");
             showTrack(res.response);
+        }
+    })
+
+    //Select Board
+    fetch('http://localhost:8080/blog/user/boards/' + trackId, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": localStorage.getItem('Authorization')
+        }
+    })
+    .then((res) => res.json())
+    .then(res => {
+        if(res.success == true) {
+            console.log("select board Success");
+            showBoard(res.response);
         }
     })
 }
@@ -49,6 +65,35 @@ const showTrack = (track) => {
             `;
 }
 
+const showBoard = (boardList) => {
+    for(let board of boardList) {
+        let boardNo = board.boardNo;
+        let tagList = board.tagList;
+        let content = board.content;
+
+        let tagElements = "";
+        for(let tag of tagList) {
+            tagElements += 
+                `
+                <div class = "tag-element" style = "">${tag}</div>
+                `;
+        }
+        document.getElementById('board-element-area').innerHTML += 
+            `
+            <div class = "col-5 board-element">
+                <div class = "row">
+                    <div class = "col-5">
+                        <div>
+                            <div class = "tag-area">${tagElements}</div>
+                            <div class = "content-area">${content}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            `;
+    }
+}
+
 //Hashtag Event
 const hashtagArray = [];
 let enterCount = 0;
@@ -73,11 +118,16 @@ document.getElementById('tag-input').addEventListener('keypress', function(e) {
 const makeHashtag = (hashtag) => {
     document.getElementById('hashtag-container').innerHTML +=
         `
-            <div class = "hashtag-elements" style = "margin-right: 10px;">#${hashtag}</div>
+            <div class = "hashtag-elements" id = "tag-${enterCount}" style = "margin-right: 10px;" onclick = "deleteHashtag('tag-${enterCount}')">#${hashtag}</div>
 
         `;
     hashtagArray.push(hashtag);
     console.log(hashtagArray);
+}
+
+const deleteHashtag = (hashtagId) => {
+    console.log("deleteHashtag called, id: " + hashtagId);
+    document.getElementById(hashtagId).remove();
 }
 
 //Write Board
@@ -91,15 +141,32 @@ document.getElementById('write-button').addEventListener('click', function() {
         },
         body: JSON.stringify({
             "content": document.getElementById('board-input').value,
-            "hashtagList": hashtagArray
+            "hashtagList": hashtagArray,
+            "trackId": trackId
         })
     })
     .then((res) => res.json())
     .then(res => {
         if(res.success == true) {
             console.log("Write Board Success");
+            document.getElementById('alert-area').innerHTML =
+            `
+                <div class = "alert alert-dark hide" role = "alert">
+                    Your board has been created successfully.
+                </div>
+            `;
+            let alertDiv = document.querySelector('.alert');
+            let opacity = 1;
+            let timer = setInterval(function() {
+                if (opacity > 0) {
+                    opacity -= 0.005;
+                    alertDiv.style.opacity = opacity;
+                } else {
+                    clearInterval(timer);
+                    alertDiv.style.display = 'none';
+                }
+            }, 10);
+
         }
     })
-
-
 });
