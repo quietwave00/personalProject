@@ -11,6 +11,8 @@ import blog.web.board.service.BoardService;
 import blog.utils.ApiUtils;
 import blog.utils.dto.ApiResult;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/blog/user")
@@ -52,8 +54,14 @@ public class BoardController {
     @GetMapping("/boards")
     public ApiResult<Result<?>> selectAll() {
         Result<?> selectBoardResponseDto = boardService.selectAll();
-        log.info("selectBoardResponseDto: " + selectBoardResponseDto.toString());
         return ApiUtils.success(selectBoardResponseDto);
+    }
+
+    //트랙별 글 조회(최신 순)
+    @GetMapping("/boards/{trackId}")
+    public ApiResult<List<BoardOfTrackResponseDto>> selectBoardOfTrack(@PathVariable("trackId") String trackId) {
+        List<BoardOfTrackResponseDto> boardOfTrackResponseDtoList = boardService.selectBoardOfTrack(trackId);
+        return ApiUtils.success(boardOfTrackResponseDtoList);
     }
 
 

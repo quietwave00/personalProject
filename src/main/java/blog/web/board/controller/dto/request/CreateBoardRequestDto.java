@@ -10,4 +10,5 @@ import java.util.List;
 public class CreateBoardRequestDto {
     private String content;
     private List<String> hashtagList;
+    private String trackId;
 }

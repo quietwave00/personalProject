@@ -35,6 +35,8 @@ public class Board {
     @ColumnDefault("0")
     private Integer count;
 
+    private String trackId;
+
     @OneToMany(mappedBy = "board")
     private List<Comment> commentList = new ArrayList<>();
 
@@ -48,16 +50,11 @@ public class Board {
     @OneToMany(mappedBy = "board")
     private List<Hashtag> hashtagList = new ArrayList<>();
 
-
     @PrePersist
     public void prePersist(){
         this.count = this.count == null ? 0 : this.count;
         this.status = this.status == null ? Status.Y : this.status;
     }
-
-
-
-
 
     //--연관관계 메소드--
     public void addComment(Comment comment) {
@@ -93,23 +90,4 @@ public class Board {
     public void deleteBoard() {
         this.status = Status.N;
     }
-
-
-
-    @Override
-    public String toString() {
-        return "Board{" +
-                "boardNo=" + boardNo +
-                ", content='" + content + '\'' +
-                ", createdDate=" + createdDate +
-                ", modifiedDate=" + modifiedDate +
-                ", count=" + count +
-                ", commentList=" + commentList +
-                ", user=" + user +
-                ", file=" + file +
-                '}';
-    }
-
-
-
 }

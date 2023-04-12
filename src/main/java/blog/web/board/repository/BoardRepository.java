@@ -14,4 +14,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Optional<Board> findByBoardNo(Long boardNo);
 
     List<Board> findByStatusOrderByBoardNoDesc(Status status);
+
+    List<Board> findByStatusAndTrackIdOrderByBoardNoDesc(Status status, String trackId);
 }

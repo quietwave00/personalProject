@@ -87,6 +87,17 @@ public class BoardServiceImpl implements BoardService {
         return new Result<>(boardListResponseDtoList);
     }
 
+    @Override
+    public List<BoardOfTrackResponseDto> selectBoardOfTrack(String trackId) {
+        List<Board> boardList = boardRepository.findByStatusAndTrackIdOrderByBoardNoDesc(Status.Y, trackId);
+        List<BoardOfTrackResponseDto> boardOfTrackResponseDtoList = new ArrayList<>();
+        for(Board board : boardList) {
+            BoardOfTrackResponseDto boardOfTrackResponseDto = mapper.toBoardOfTrackDto(board);
+            boardOfTrackResponseDtoList.add(boardOfTrackResponseDto);
+        }
+        return boardOfTrackResponseDtoList;
+    }
+
 
     //단일 메소드
     private Board findBoard(Long boardNo) {
