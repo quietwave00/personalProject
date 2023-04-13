@@ -47,7 +47,7 @@ public class Board {
     @OneToMany(mappedBy = "board")
     private List<File> file = new ArrayList<>();
 
-    @OneToMany(mappedBy = "board")
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Hashtag> hashtagList = new ArrayList<>();
 
     @PrePersist
@@ -89,5 +89,22 @@ public class Board {
     //게시글 삭제
     public void deleteBoard() {
         this.status = Status.N;
+    }
+
+    @Override
+    public String toString() {
+        return "Board{" +
+                "boardNo=" + boardNo +
+                ", content='" + content + '\'' +
+                ", createdDate=" + createdDate +
+                ", modifiedDate=" + modifiedDate +
+                ", status=" + status +
+                ", count=" + count +
+                ", trackId='" + trackId + '\'' +
+                ", commentList=" + commentList +
+                ", user=" + user +
+                ", file=" + file +
+                ", hashtagList=" + hashtagList +
+                '}';
     }
 }

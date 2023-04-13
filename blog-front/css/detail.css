@@ -89,6 +89,7 @@
     border-radius: 30px;
     margin-right: 30px;
     padding: 20px;
+    margin-bottom: 30px;
 }
 
 .tag-element {
@@ -97,6 +98,7 @@
     border-radius: 10px;
     padding: 5px;
     margin: 2px;
+    font-weight: bold;
 }
 
 .content-area {

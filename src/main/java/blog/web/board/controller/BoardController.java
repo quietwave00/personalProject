@@ -37,9 +37,9 @@ public class BoardController {
     }
 
     //글 상세 조회
-    @GetMapping("/boards/{boardNo}/{userId}")
-    public ApiResult<DetailsBoardResponseDto> detail(@PathVariable("boardNo") Long boardNo, @PathVariable("userId") String userId) {
-        DetailsBoardResponseDto updateBoardResponseDto = boardService.detail(boardNo, userId);
+    @GetMapping("/board/{boardNo}")
+    public ApiResult<DetailsBoardResponseDto> detail(@PathVariable("boardNo") Long boardNo) {
+        DetailsBoardResponseDto updateBoardResponseDto = boardService.detail(boardNo);
         return ApiUtils.success(updateBoardResponseDto);
     }
 

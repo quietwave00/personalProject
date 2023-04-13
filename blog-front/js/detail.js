@@ -75,23 +75,23 @@ const showBoard = (boardList) => {
         for(let tag of tagList) {
             tagElements += 
                 `
-                <div class = "tag-element" style = "">${tag}</div>
+                <div class = "tag-element">#${tag}</div>
                 `;
         }
         document.getElementById('board-element-area').innerHTML += 
             `
             <div class = "col-5 board-element">
                 <div class = "row">
-                    <div class = "col-5">
-                        <div>
-                            <div class = "tag-area">${tagElements}</div>
-                            <div class = "content-area">${content}</div>
-                        </div>
+                    <div>
+                        <input type = "hidden" class = "board-no" value = "${boardNo}">
+                        <div class = "tag-area">${tagElements}</div>
+                        <div class = "content-area">${content}</div>
                     </div>
                 </div>
             </div>
             `;
     }
+    moveDetails();
 }
 
 //Hashtag Event
@@ -166,7 +166,20 @@ document.getElementById('write-button').addEventListener('click', function() {
                     alertDiv.style.display = 'none';
                 }
             }, 10);
-
         }
     })
 });
+
+//Move To The Board
+const moveDetails = () => {
+    console.log("move to board Called");
+    const boardElements = document.getElementsByClassName('board-element');
+
+    for(let element of boardElements) {
+        element.addEventListener('click', (e) => {
+            const boardNo = e.currentTarget.querySelector('.board-no').value;
+            console.log("select boardNo: " + boardNo);
+            window.location.href = `board.html?boardNo=${boardNo}`;
+        })
+    }
+}

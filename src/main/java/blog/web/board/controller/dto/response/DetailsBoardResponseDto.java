@@ -3,6 +3,8 @@ package blog.web.board.controller.dto.response;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @Data
@@ -13,5 +15,6 @@ public class DetailsBoardResponseDto {
     String userId;
     LocalDateTime createdDate;
     Integer count;
+    List<String> hashtagList = new ArrayList<>();
 
 }

@@ -4,7 +4,6 @@ import blog.domain.entity.Hashtag;
 import blog.domain.entity.Status;
 import blog.jwt.UserContextHolder;
 import blog.web.hashtag.mapper.HashtagMapper;
-import blog.web.hashtag.repository.HashtagRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,7 +31,6 @@ public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
-    private final HashtagRepository hashtagRepository;
     private final BoardMapper mapper;
     private final HashtagMapper hashtagMapper;
 
@@ -42,7 +40,7 @@ public class BoardServiceImpl implements BoardService {
     public CreateBoardResponseDto create(CreateBoardRequestDto createBoardRequestDto) {
         User findUser = findUser(UserContextHolder.getUserId());
         Board beforeBoard = mapper.toEntity(createBoardRequestDto);
-        List<Hashtag> hashtagList = saveHashtag(createBoardRequestDto.getHashtagList());
+        List<Hashtag> hashtagList = makeHashtagList(createBoardRequestDto.getHashtagList());
         beforeBoard.addUser(findUser);
         beforeBoard.addHashtag(hashtagList);
         Board afterBoard = boardRepository.save(beforeBoard);
@@ -58,10 +56,10 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public DetailsBoardResponseDto detail(Long boardNo, String userId) {
+    public DetailsBoardResponseDto detail(Long boardNo) {
         Board findBoard = findBoard(boardNo);
         //조회수
-        if(!findBoard.getUser().getUserId().equals(userId)) {
+        if(!UserContextHolder.getUserId().equals(findBoard.getUser().getUserId())) {
             findBoard.updateCount();
             boardRepository.save(findBoard);
         }
@@ -111,10 +109,10 @@ public class BoardServiceImpl implements BoardService {
     }
 
 
-    private List<Hashtag> saveHashtag(List<String> hashtagStrList) {
+    private List<Hashtag> makeHashtagList(List<String> hashtagStrList) {
         List<Hashtag> hashtagList = new ArrayList<>();
         for(String hashtagStr : hashtagStrList) {
-            Hashtag hashtag = hashtagRepository.save(hashtagMapper.toEntity(hashtagStr));
+            Hashtag hashtag = hashtagMapper.toEntity(hashtagStr);
             hashtagList.add(hashtag);
         }
         return hashtagList;

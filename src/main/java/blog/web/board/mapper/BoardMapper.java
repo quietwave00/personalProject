@@ -45,6 +45,7 @@ public class BoardMapper {
                 .userId(board.getUser().getUserId())
                 .createdDate(board.getCreatedDate().toLocalDateTime())
                 .count(board.getCount())
+                .hashtagList(board.getHashtagList().stream().map(Hashtag::getName).collect(Collectors.toList()))
                 .build();
     }
 

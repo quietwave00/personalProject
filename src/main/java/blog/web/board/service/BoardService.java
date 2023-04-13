@@ -12,7 +12,7 @@ public interface BoardService {
 
     UpdateBoardResponseDto update(UpdateBoardRequestDto updateBoardRequestDto);
 
-    DetailsBoardResponseDto detail(Long boardNo, String userId);
+    DetailsBoardResponseDto detail(Long boardNo);
 
     DeleteBoardResponseDto delete(DeleteBoardRequestDto deleteBoardRequestDto);
 
