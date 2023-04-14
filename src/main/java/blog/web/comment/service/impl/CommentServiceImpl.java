@@ -5,6 +5,7 @@ import blog.domain.entity.Comment;
 import blog.domain.entity.Status;
 import blog.domain.entity.User;
 import blog.exception.ErrorCode;
+import blog.jwt.UserContextHolder;
 import blog.utils.dto.ApiError;
 import blog.web.board.repository.BoardRepository;
 import blog.web.comment.controller.dto.request.CreateCommentRequestDto;
@@ -37,7 +38,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CreateCommentResponseDto create(CreateCommentRequestDto createCommentRequestDto) {
         Board findBoard = findBoard(createCommentRequestDto.getBoardNo());
-        User findUser = findUser(createCommentRequestDto.getUserId());
+        User findUser = findUser(UserContextHolder.getUserId());
 
         Comment beforeComment = mapper.toEntity(createCommentRequestDto);
         beforeComment.addBoard(findBoard);

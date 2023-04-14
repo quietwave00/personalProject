@@ -6,5 +6,4 @@ import lombok.Getter;
 public class CreateCommentRequestDto {
     private Long boardNo;
     private String content;
-    private String userId;
 }

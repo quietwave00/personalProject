@@ -22,6 +22,7 @@ public class Board {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long boardNo;
 
+    @Lob
     private String content;
 
     @CreationTimestamp

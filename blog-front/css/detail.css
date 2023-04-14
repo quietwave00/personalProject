@@ -110,3 +110,7 @@
     cursor: pointer;
     background-color: rgb(226, 225, 225);
 }
+
+.createdDate-area {
+    color: gray;
+}
