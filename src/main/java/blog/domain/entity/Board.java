@@ -51,6 +51,9 @@ public class Board {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Hashtag> hashtagList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "board")
+    private List<Like> likeList = new ArrayList<>();
+
     @PrePersist
     public void prePersist(){
         this.count = this.count == null ? 0 : this.count;
@@ -91,6 +94,10 @@ public class Board {
     public void deleteBoard() {
         this.status = Status.N;
     }
+
+    //좋아요
+
+
 
     @Override
     public String toString() {

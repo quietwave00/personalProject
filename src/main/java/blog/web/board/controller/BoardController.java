@@ -64,6 +64,20 @@ public class BoardController {
         return ApiUtils.success(boardOfTrackResponseDtoList);
     }
 
+    //좋아요 등록
+    @GetMapping("/boards/like/{boardNo}")
+    public ApiResult<String> likeBoard(@PathVariable("boardNo") Long boardNo) {
+        String likeAlert = boardService.likeBoard(boardNo);
+        return ApiUtils.success(likeAlert);
+    }
+
+    //좋아요 취소
+    @DeleteMapping("/boards/like/{boardNo}")
+    public ApiResult<String> unLikeBoard(@PathVariable("boardNo") Long boardNo) {
+        String likeAlert = boardService.unLikeBoard(boardNo);
+        return ApiUtils.success(likeAlert);
+    }
+
 
 
 }
