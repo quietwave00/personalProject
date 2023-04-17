@@ -1,5 +1,6 @@
 package blog.web.board.controller;
 
+import blog.web.board.controller.dto.request.LikeBoardRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -65,9 +66,9 @@ public class BoardController {
     }
 
     //좋아요 등록
-    @GetMapping("/boards/like/{boardNo}")
-    public ApiResult<String> likeBoard(@PathVariable("boardNo") Long boardNo) {
-        String likeAlert = boardService.likeBoard(boardNo);
+    @PostMapping("/boards/like")
+    public ApiResult<String> likeBoard(@RequestBody LikeBoardRequestDto likeBoardRequestDto) {
+        String likeAlert = boardService.likeBoard(likeBoardRequestDto.getBoardNo());
         return ApiUtils.success(likeAlert);
     }
 
@@ -76,6 +77,20 @@ public class BoardController {
     public ApiResult<String> unLikeBoard(@PathVariable("boardNo") Long boardNo) {
         String likeAlert = boardService.unLikeBoard(boardNo);
         return ApiUtils.success(likeAlert);
+    }
+
+    //좋아요 개수 조회
+    @GetMapping("/boards/like/{boardNo}")
+    public ApiResult<Long> countLikes(@PathVariable("boardNo") Long boardNo) {
+        Long countLikes = boardService.countLikes(boardNo);
+        return ApiUtils.success(countLikes);
+    }
+
+    //좋아요 여부 조회
+    @GetMapping("/boards/like/count/{boardNo}")
+    public ApiResult<Boolean> isBoardLiked(@PathVariable("boardNo") Long boardNo) {
+        Boolean checkLiked = boardService.isBoardLiked(boardNo);
+        return ApiUtils.success(checkLiked);
     }
 
 

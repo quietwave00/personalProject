@@ -23,4 +23,8 @@ public interface BoardService {
     String likeBoard(Long boardNo);
 
     String unLikeBoard(Long boardNo);
+
+    Long countLikes(Long boardNo);
+
+    Boolean isBoardLiked(Long boardNo);
 }

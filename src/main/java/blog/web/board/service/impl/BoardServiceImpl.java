@@ -126,6 +126,19 @@ public class BoardServiceImpl implements BoardService {
         }
     }
 
+    @Override
+    public Long countLikes(Long boardNo) {
+        Board findBoard = findBoard(boardNo);
+        return likeRepository.countByBoard(findBoard);
+    }
+
+    @Override
+    public Boolean isBoardLiked(Long boardNo) {
+        User findUser = findUser(UserContextHolder.getUserId());
+        Board findBoard = findBoard(boardNo);
+        return likeRepository.existsByBoardAndUser(findBoard, findUser);
+    }
+
 
     //단일 메소드
     private Board findBoard(Long boardNo) {

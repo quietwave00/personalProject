@@ -40,14 +40,19 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     @OneToMany(mappedBy = "user")
     private List<Board> board = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<Comment> comment = new ArrayList<>();
 
-    @Enumerated(EnumType.STRING)
-    private Status status;
+    @OneToMany(mappedBy = "user")
+    private List<Like> likeList = new ArrayList<>();
+
+
 
     //--연관관계 메소드--
     public void addBoard(Board board) {
