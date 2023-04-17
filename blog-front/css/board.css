@@ -1,0 +1,88 @@
+#board-area {
+    position: absolute;
+    top: 20%;
+    left: 25%;
+    background-color: rgb(236, 236, 236);
+    width: 60%;
+    height: auto;
+    border-radius: 30px;
+    padding: 30px;
+}
+
+.tag-elements {
+    display: inline-block;
+    margin-top: 30px;
+    margin-right: 10px;
+    background-color: lightgray;
+    border-radius: 10px;
+    padding: 5px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+#created-date-area {
+    margin-top: 35px;
+    text-align: right;
+    font-size: 15px;
+    color: gray;
+}
+
+#content-area {
+    margin-top: 30px;
+}
+
+#user-area {
+    text-align: right;
+}
+
+#comment-area {
+    position: absolute;
+    top: 58%;
+    left: 25%;
+}
+
+#comment-input {
+    margin-left: 30px;
+    margin-right: 20px;
+    width: 700px;
+    border: 0px;
+    border-bottom: 3px solid black;
+}
+
+#comment-input:focus {
+    outline: none;
+    box-shadow: none;
+
+}
+
+#comment-write-button {
+    border-radius: 10px;
+}
+
+#like-area {
+    position: absolute;
+    top: 50%;
+    left: 26%;
+}
+
+#like-alert-area {
+    display: inline;
+}
+
+#like-button-area {
+    display: inline;
+}
+
+#like-button {
+    font-size: 30px;
+}
+
+#like-alert {
+    font-size: 15px;
+}
+
+#like-button:hover {
+    cursor: pointer;
+    background-color: rgb(238, 237, 237);
+    border-radius: 30px;
+}

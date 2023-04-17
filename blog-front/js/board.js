@@ -1,7 +1,6 @@
-
-window.onload = () => {
-    const boardNo = new URLSearchParams(window.location.search).get('boardNo');
-    fetch('http://localhost:8080/blog/user/board/' + boardNo, {
+const boardNo = new URLSearchParams(window.location.search).get('boardNo');
+function onloadData(url, successCallback) {
+    fetch(url, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -9,26 +8,21 @@ window.onload = () => {
         }
     })
     .then((res) => res.json())
-    .then(res => {
-        if(res.success == true) {
-            showBoard(res.response);
+    .then((res) => {
+        if (res.success === true) {
+            successCallback(res.response);
         }
     });
+}
 
-    fetch('http://localhost:8080/blog/user/comments/' + boardNo, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": localStorage.getItem("Authorization")
+window.onload = () => {
+    onloadData(`http://localhost:8080/blog/user/board/${boardNo}`, showBoard);
+    onloadData(`http://localhost:8080/blog/user/comments/${boardNo}`, showComments);
+    onloadData(`http://localhost:8080/blog/user/boards/like/count/${boardNo}`, (response) => {
+        if (response === true) {
+            document.getElementById("like-button-area").innerHTML = '<span id = "like-button">♥︎</span>';
         }
-    })
-    .then((res) => res.json())
-    .then (res => {
-        if(res.success == true) {
-            showComments(res.response);
-        }
-    })
-
+    });
 }
 
 const showBoard = (board) => {
@@ -107,5 +101,45 @@ const addComment = (comment) => {
         </div>
     `;
 
+}
+
+//Like Event
+document.getElementById('like-button').addEventListener('click', function(e) {
+    fetch('http://localhost:8080/blog/user/boards/like', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": localStorage.getItem("Authorization")
+        },
+        body: JSON.stringify({
+            "boardNo": new URLSearchParams(window.location.search).get('boardNo')
+        })
+    })
+    .then((res) => res.json())
+    .then(res => {
+        if(res.success == true) {
+            console.log("Like post Success");
+            document.getElementById("like-button-area").innerHTML = '<span id = "like-button">♥︎</span>';
+            showLikes();
+        }
+    })
+})
+
+const showLikes = () => {
+    fetch('http://localhost:8080/blog/user/boards/like/' + boardNo, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": localStorage.getItem("Authorization")
+        }
+    })
+    .then((res) => res.json())
+    .then(res => {
+        if(res.success == true) {
+            console.log(res);
+            const countLikes = res.response;
+            document.getElementById('like-alert-area').innerHTML = `<span id = "like-alert">${countLikes} Like</span>`;
+        }
+    })
 }
 
