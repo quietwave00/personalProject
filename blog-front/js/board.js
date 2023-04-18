@@ -19,13 +19,18 @@ window.onload = () => {
     onloadData(`http://localhost:8080/blog/user/board/${boardNo}`, showBoard);
     onloadData(`http://localhost:8080/blog/user/comments/${boardNo}`, showComments);
     onloadData(`http://localhost:8080/blog/user/boards/like/count/${boardNo}`, (response) => {
+        console.log("like check: " + response);
         document.getElementById("like-button-area").innerHTML = `<input type = "hidden" id = "checkLiked" value = ${response}>`;
-        if (response === true) {
+        if (response == true) {
+            console.log("꽉찬하트");
             document.getElementById("like-button-area").innerHTML += '<span id = "like-button">♥︎</span>';
+        } else {
+            console.log("빈하트");
+            document.getElementById("like-button-area").innerHTML += '<span id = "like-button">♡</span>';
         }
     });
     onloadData(`http://localhost:8080/blog/user/boards/like/${boardNo}`, (response) => {
-        document.getElementById('like-alert-area').innerHTML = `<input type = "hidden" id = "checkLiked" value = ${response}><span id = "like-alert">${response} Like</span>`;
+        document.getElementById('like-alert-area').innerHTML = `<span id = "like-alert">${response} Like</span>`;
     });
 }
 
@@ -109,7 +114,8 @@ const addComment = (comment) => {
 
 //Like Event
 document.getElementById('like-button-area').addEventListener('click', function() {
-    if(document.getElementById('checkLiked').value == 'true') {
+    console.log("클릭했을 때 value값: " + document.getElementById('checkLiked').value);
+    if(document.getElementById('checkLiked').value == 'true') { //좋아요했음
         console.log('Liked True');
         fetch('http://localhost:8080/blog/user/boards/like/' + boardNo, {
             method: 'DELETE',
@@ -122,10 +128,12 @@ document.getElementById('like-button-area').addEventListener('click', function()
         .then(res => {
             if(res.success == true) {
                 console.log("UnLike Success");
-                document.getElementById("like-button-area").innerHTML = '<span id = "like-button">♡</span>';
+                // document.getElementById("like-button-area").innerHTML = '<span id = "like-button">♡</span>';
+                document.getElementById('checkLiked').value = false;
+                document.getElementById("like-button").innerHTML = "♡";
             }
         });
-    } else {
+    } else { //좋아요안했음
         fetch('http://localhost:8080/blog/user/boards/like', {
         method: "POST",
         headers: {
@@ -140,10 +148,11 @@ document.getElementById('like-button-area').addEventListener('click', function()
     .then(res => {
         if(res.success == true) {
             console.log("Like post Success");
-            document.getElementById("like-button-area").innerHTML = '<span id = "like-button">♥︎</span>';
             onloadData(`http://localhost:8080/blog/user/boards/like/count/${boardNo}`, (response) => {
             if (response === true) {
-                document.getElementById("like-button-area").innerHTML = '<span id = "like-button">♥︎</span>';
+                document.getElementById('checkLiked').value = true;
+                document.getElementById("like-button").innerHTML = "♥︎";
+                //'<input type = "hidden" id = "checkLiked" value = "<span id = "like-button">♥︎</span>';
             }
     });
         }
