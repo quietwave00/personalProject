@@ -96,6 +96,7 @@ document.getElementById('comment-write-button').addEventListener('click', () => 
     .then(res => {
         if(res.success == true) {
             addComment(res.response);
+            document.getElementById('comment-input').value = "";
         }
     })
 });
@@ -131,6 +132,9 @@ document.getElementById('like-button-area').addEventListener('click', function()
                 // document.getElementById("like-button-area").innerHTML = '<span id = "like-button">♡</span>';
                 document.getElementById('checkLiked').value = false;
                 document.getElementById("like-button").innerHTML = "♡";
+                onloadData(`http://localhost:8080/blog/user/boards/like/${boardNo}`, (response) => {
+                document.getElementById('like-alert-area').innerHTML = `<span id = "like-alert">${response} Like</span>`;
+                });
             }
         });
     } else { //좋아요안했음
@@ -152,8 +156,10 @@ document.getElementById('like-button-area').addEventListener('click', function()
             if (response === true) {
                 document.getElementById('checkLiked').value = true;
                 document.getElementById("like-button").innerHTML = "♥︎";
-                //'<input type = "hidden" id = "checkLiked" value = "<span id = "like-button">♥︎</span>';
-            }
+                onloadData(`http://localhost:8080/blog/user/boards/like/${boardNo}`, (response) => {
+                document.getElementById('like-alert-area').innerHTML = `<span id = "like-alert">${response} Like</span>`;
+            });
+        }
     });
         }
     })

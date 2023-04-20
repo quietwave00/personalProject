@@ -59,9 +59,9 @@ public class BoardController {
     }
 
     //트랙별 글 조회(최신 순)
-    @GetMapping("/boards/{trackId}")
-    public ApiResult<List<BoardOfTrackResponseDto>> selectBoardOfTrack(@PathVariable("trackId") String trackId) {
-        List<BoardOfTrackResponseDto> boardOfTrackResponseDtoList = boardService.selectBoardOfTrack(trackId);
+    @GetMapping("/boards/{trackId}/{order}")
+    public ApiResult<List<BoardOfTrackResponseDto>> selectBoardOfTrack(@PathVariable("trackId") String trackId, @PathVariable("order") String order) {
+        List<BoardOfTrackResponseDto> boardOfTrackResponseDtoList = boardService.selectBoardOfTrack(trackId, order);
         return ApiUtils.success(boardOfTrackResponseDtoList);
     }
 

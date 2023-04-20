@@ -87,14 +87,25 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardOfTrackResponseDto> selectBoardOfTrack(String trackId) {
-        List<Board> boardList = boardRepository.findByStatusAndTrackIdOrderByBoardNoDesc(Status.Y, trackId);
-        List<BoardOfTrackResponseDto> boardOfTrackResponseDtoList = new ArrayList<>();
-        for(Board board : boardList) {
-            BoardOfTrackResponseDto boardOfTrackResponseDto = mapper.toBoardOfTrackDto(board);
-            boardOfTrackResponseDtoList.add(boardOfTrackResponseDto);
+    public List<BoardOfTrackResponseDto> selectBoardOfTrack(String trackId, String order) {
+        if("byOrder".equals(order)) {
+            List<Board> boardList = boardRepository.findByStatusAndTrackIdOrderByBoardNoDesc(Status.Y, trackId);
+            List<BoardOfTrackResponseDto> boardOfTrackResponseDtoList = new ArrayList<>();
+            for(Board board : boardList) {
+                BoardOfTrackResponseDto boardOfTrackResponseDto = mapper.toBoardOfTrackDto(board);
+                boardOfTrackResponseDtoList.add(boardOfTrackResponseDto);
+            }
+            return boardOfTrackResponseDtoList;
+        } else {
+            List<Board> boardList = likeRepository.countByBoardGroupByBoard();
+            List<BoardOfTrackResponseDto> boardOfTrackResponseDtoList = new ArrayList<>();
+            for(Board board : boardList) {
+                BoardOfTrackResponseDto boardOfTrackResponseDto = mapper.toBoardOfTrackDto(board);
+                boardOfTrackResponseDtoList.add(boardOfTrackResponseDto);
+            }
+            return boardOfTrackResponseDtoList;
         }
-        return boardOfTrackResponseDtoList;
+
     }
 
     @Override

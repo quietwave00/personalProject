@@ -18,7 +18,7 @@ public interface BoardService {
 
     Result<?> selectAll();
 
-    List<BoardOfTrackResponseDto> selectBoardOfTrack(String trackId);
+    List<BoardOfTrackResponseDto> selectBoardOfTrack(String trackId, String order);
 
     String likeBoard(Long boardNo);
 
