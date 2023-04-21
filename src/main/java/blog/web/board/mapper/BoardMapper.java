@@ -72,4 +72,12 @@ public class BoardMapper {
                 .build();
 
     }
+
+    public GetBoardByHashtagResponseDto toBoardByHashtagDto(Board board) {
+        return GetBoardByHashtagResponseDto.builder()
+                .boardNo(board.getBoardNo())
+                .tagList(board.getHashtagList().stream().map(Hashtag::getName).collect(Collectors.toList()))
+                .content(board.getContent())
+                .build();
+    }
 }

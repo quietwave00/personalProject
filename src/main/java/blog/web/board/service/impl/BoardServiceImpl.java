@@ -2,7 +2,9 @@ package blog.web.board.service.impl;
 
 import blog.domain.entity.*;
 import blog.jwt.UserContextHolder;
+import blog.web.board.controller.dto.response.GetBoardByHashtagResponseDto;
 import blog.web.hashtag.mapper.HashtagMapper;
+import blog.web.hashtag.repository.HashtagRepository;
 import blog.web.like.repository.LikeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +22,8 @@ import blog.web.board.service.BoardService;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -32,6 +34,7 @@ public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
+    private final HashtagRepository hashtagRepository;
     private final BoardMapper mapper;
     private final HashtagMapper hashtagMapper;
 
@@ -150,6 +153,18 @@ public class BoardServiceImpl implements BoardService {
         return likeRepository.existsByBoardAndUser(findBoard, findUser);
     }
 
+    public List<GetBoardByHashtagResponseDto> getBoardByHashtag(String hashtagElement) {
+        List<Board> boardList = findByHashtagName(hashtagElement).stream()
+                .map(Hashtag::getBoard)
+                .collect(Collectors.toList());
+        List<GetBoardByHashtagResponseDto> getBoardByHashtagResponseDtoList = new ArrayList<>();
+        for(Board board : boardList) {
+            GetBoardByHashtagResponseDto getBoardByHashtagResponseDto = mapper.toBoardByHashtagDto(board);
+            getBoardByHashtagResponseDtoList.add(getBoardByHashtagResponseDto);
+        }
+        return getBoardByHashtagResponseDtoList;
+    }
+
 
     //단일 메소드
     private Board findBoard(Long boardNo) {
@@ -165,6 +180,11 @@ public class BoardServiceImpl implements BoardService {
     private Like findLike(Board board, User user) {
         return likeRepository.findByBoardAndUser(board, user)
                 .orElseThrow(() -> new ApiError(ErrorCode.LIKE_NOT_FOUND));
+    }
+
+    private List<Hashtag> findByHashtagName(String hashtag) {
+        return hashtagRepository.findByName(hashtag)
+                .orElseThrow(() -> new ApiError(ErrorCode.HASHTAG_NOT_FOUND));
     }
 
 

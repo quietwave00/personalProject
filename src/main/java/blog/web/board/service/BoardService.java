@@ -4,6 +4,7 @@ import blog.web.board.controller.dto.request.CreateBoardRequestDto;
 import blog.web.board.controller.dto.request.DeleteBoardRequestDto;
 import blog.web.board.controller.dto.request.UpdateBoardRequestDto;
 import blog.web.board.controller.dto.response.*;
+import blog.web.board.controller.dto.response.GetBoardByHashtagResponseDto;
 
 import java.util.List;
 
@@ -27,4 +28,6 @@ public interface BoardService {
     Long countLikes(Long boardNo);
 
     Boolean isBoardLiked(Long boardNo);
+
+    List<GetBoardByHashtagResponseDto> getBoardByHashtag(String hashtag);
 }

@@ -93,6 +93,13 @@ public class BoardController {
         return ApiUtils.success(checkLiked);
     }
 
+    //해쉬태그별 게시글 조회
+    @GetMapping("/hashtag/{hashtag}")
+    public ApiResult<List<GetBoardByHashtagResponseDto>> getBoardByHashtag(@PathVariable("hashtag") String hashtag) {
+        List<GetBoardByHashtagResponseDto> getBoardByHashtagResponseDto = boardService.getBoardByHashtag(hashtag);
+        return ApiUtils.success(getBoardByHashtagResponseDto);
+    }
+
 
 
 }

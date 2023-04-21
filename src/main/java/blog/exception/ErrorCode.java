@@ -13,7 +13,8 @@ public enum ErrorCode {
     BOARD_NOT_FOUND(HttpStatus.NOT_FOUND, "이미 삭제되었거나 없는 게시글입니다."),
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "이미 삭제되었거나 없는 댓글입니다."),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."),
-    LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "좋아요 내역을 찾을 수 없습니다.")
+    LIKE_NOT_FOUND(HttpStatus.NOT_FOUND, "좋아요 내역을 찾을 수 없습니다."),
+    HASHTAG_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 해쉬태그를 찾을 수 없습니다.")
     ;
 
     private HttpStatus httpStatus;
