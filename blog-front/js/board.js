@@ -32,6 +32,8 @@ window.onload = () => {
     onloadData(`http://localhost:8080/blog/user/boards/like/${boardNo}`, (response) => {
         document.getElementById('like-alert-area').innerHTML = `<span id = "like-alert">${response} Like</span>`;
     });
+
+    
 }
 
 const showBoard = (board) => {
@@ -158,13 +160,22 @@ document.getElementById('like-button-area').addEventListener('click', function()
                 document.getElementById("like-button").innerHTML = "♥︎";
                 onloadData(`http://localhost:8080/blog/user/boards/like/${boardNo}`, (response) => {
                 document.getElementById('like-alert-area').innerHTML = `<span id = "like-alert">${response} Like</span>`;
-            });
-        }
-    });
+                });
+            }
+        });
         }
     })
     }
-    
 });
+
+//Hashtag Event
+const elements = document.getElementsByClassName('tag-elements');
+for (let i = 0; i < elements.length; i++) {
+    elements[i].addEventListener('click', (e) => {
+        console.log("hashtag click");
+    });
+}
+
+
 
 
