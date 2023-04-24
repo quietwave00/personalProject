@@ -3,12 +3,10 @@ package blog.web.comment.controller;
 import blog.utils.ApiUtils;
 import blog.utils.dto.ApiResult;
 import blog.web.comment.controller.dto.request.CreateCommentRequestDto;
+import blog.web.comment.controller.dto.request.CreateRepliesRequestDto;
 import blog.web.comment.controller.dto.request.DeleteCommentRequestDto;
 import blog.web.comment.controller.dto.request.UpdateCommentRequestDto;
-import blog.web.comment.controller.dto.response.CommentListResponseDto;
-import blog.web.comment.controller.dto.response.CreateCommentResponseDto;
-import blog.web.comment.controller.dto.response.DeleteCommentResponseDto;
-import blog.web.comment.controller.dto.response.UpdateCommentResponseDto;
+import blog.web.comment.controller.dto.response.*;
 import blog.web.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -51,6 +49,13 @@ public class CommentController {
     public ApiResult<List<CommentListResponseDto>> select(@PathVariable("boardNo") Long boardNo) {
         List<CommentListResponseDto> commentListResponseDto = commentService.select(boardNo);
         return ApiUtils.success(commentListResponseDto);
+    }
+
+    //대댓글 작성
+    @PostMapping("/comments/replies")
+    public ApiResult<CreateRepliesResponseDto> createReplies(@RequestBody CreateRepliesRequestDto createRepliesRequestDto) {
+        CreateRepliesResponseDto createRepliesResponseDto = commentService.createReplies(createRepliesRequestDto);
+        return ApiUtils.success(createRepliesResponseDto);
     }
 
 

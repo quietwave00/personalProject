@@ -2,10 +2,8 @@ package blog.web.comment.mapper;
 
 import blog.domain.entity.Comment;
 import blog.web.comment.controller.dto.request.CreateCommentRequestDto;
-import blog.web.comment.controller.dto.response.CommentListResponseDto;
-import blog.web.comment.controller.dto.response.CreateCommentResponseDto;
-import blog.web.comment.controller.dto.response.DeleteCommentResponseDto;
-import blog.web.comment.controller.dto.response.UpdateCommentResponseDto;
+import blog.web.comment.controller.dto.request.CreateRepliesRequestDto;
+import blog.web.comment.controller.dto.response.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -44,6 +42,20 @@ public class CommentMapper {
                 .userId(comment.getUser().getUserId())
                 .content(comment.getContent())
                 .createdDate(comment.getCreatedDate().toLocalDateTime())
+                .build();
+    }
+
+    public Comment toRepliesEntity(CreateRepliesRequestDto createRepliesRequestDto) {
+        return Comment.builder()
+                .content(createRepliesRequestDto.getContent())
+                .build();
+    }
+
+    public CreateRepliesResponseDto toCreateRepliesDto(Comment afterComment) {
+        return CreateRepliesResponseDto.builder()
+                .userId(afterComment.getUser().getUserId())
+                .content(afterComment.getContent())
+                .createDate(afterComment.getCreatedDate().toLocalDateTime())
                 .build();
     }
 }

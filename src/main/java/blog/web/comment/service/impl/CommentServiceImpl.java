@@ -9,12 +9,10 @@ import blog.jwt.UserContextHolder;
 import blog.utils.dto.ApiError;
 import blog.web.board.repository.BoardRepository;
 import blog.web.comment.controller.dto.request.CreateCommentRequestDto;
+import blog.web.comment.controller.dto.request.CreateRepliesRequestDto;
 import blog.web.comment.controller.dto.request.DeleteCommentRequestDto;
 import blog.web.comment.controller.dto.request.UpdateCommentRequestDto;
-import blog.web.comment.controller.dto.response.CommentListResponseDto;
-import blog.web.comment.controller.dto.response.CreateCommentResponseDto;
-import blog.web.comment.controller.dto.response.DeleteCommentResponseDto;
-import blog.web.comment.controller.dto.response.UpdateCommentResponseDto;
+import blog.web.comment.controller.dto.response.*;
 import blog.web.comment.mapper.CommentMapper;
 import blog.web.comment.repository.CommentRepository;
 import blog.web.comment.service.CommentService;
@@ -74,6 +72,22 @@ public class CommentServiceImpl implements CommentService {
             commentListResponseDtoList.add(commentListResponseDto);
         }
         return commentListResponseDtoList;
+    }
+
+    @Override
+    public CreateRepliesResponseDto createReplies(CreateRepliesRequestDto createRepliesRequestDto) {
+        Board findBoard = findBoard(createRepliesRequestDto.getBoardNo());
+        User findUser = findUser(UserContextHolder.getUserId());
+        Comment findParent = findComment(createRepliesRequestDto.getParentNo());
+
+        Comment beforeComment = mapper.toRepliesEntity(createRepliesRequestDto);
+        beforeComment.addBoard(findBoard);
+        beforeComment.addUser(findUser);
+        beforeComment.addParent(findParent);
+
+        Comment afterComment = commentRepository.save(beforeComment);
+
+        return mapper.toCreateRepliesDto(afterComment);
     }
 
 

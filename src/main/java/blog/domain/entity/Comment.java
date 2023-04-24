@@ -34,7 +34,7 @@ public class Comment {
     private Comment parent;
 
     @OneToMany(mappedBy = "parent")
-    private List<Comment> child = new ArrayList<>();
+    private List<Comment> children = new ArrayList<>();
 
     @CreationTimestamp
     private Timestamp createdDate;
@@ -64,6 +64,11 @@ public class Comment {
         user.getComment().add(this);
     }
 
+    public void addParent(Comment parent) {
+        this.parent = parent;
+        parent.getChildren().add(this);
+    }
+
     //--비즈니스 로직--
     //댓글 수정
     public void update(String content) {
@@ -75,7 +80,6 @@ public class Comment {
     public void delete() {
         this.status = Status.N;
     }
-
 
 
 }
