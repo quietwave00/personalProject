@@ -1,0 +1,57 @@
+@import url(http://weloveiconfonts.com/api/?family=entypo);
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+
+/* zocial */
+[class*="entypo-"]:before {
+  font-family: 'entypo', sans-serif;
+}
+
+
+*,
+*:before,
+*:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box; 
+}
+
+body {
+    background: #3d3d3d;
+  }
+
+
+input {
+    padding: 16px;
+    border-radius:7px;
+    border:0px;
+    background: rgba(255,255,255,.2);
+    display: block;
+    margin: 15px;
+    width: 300px;  
+    font-size:18px;
+    height: 40px;
+  }
+  
+  input:focus {
+    outline-color: rgba(0,0,0,0);
+    background: lightgray;
+    color: black;
+  }
+
+
+div {
+    position: relative;
+    margin: 100px auto;
+    width: 450px;
+    height: auto;
+  }
+
+  button {
+    height: 30px;
+    width: 100px;
+    border: 0px;
+    background: gray;
+    border-radius:7px;
+    color: lightgray;
+    font-size:22px;
+  }
