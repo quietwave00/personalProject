@@ -64,7 +64,7 @@ public class CommentMapper {
                 .build();
     }
 
-    public CommentListResponseDto.Replies toRepliesDto(Comment comment) {
+    public CommentListResponseDto.Replies toReplies(Comment comment) {
         return CommentListResponseDto.Replies.builder()
                 .userId(comment.getUser().getUserId())
                 .content(comment.getContent())

@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -65,17 +66,15 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<CommentListResponseDto> select(Long boardNo) {
-        List<Comment> findCommentList = commentRepository.findByBoardAndStatus(findBoard(boardNo), Status.Y);
-        List<CommentListResponseDto> commentListResponseDtoList = new ArrayList<>();
-        for(Comment comment : findCommentList) {
-            List<Comment> childList = comment.getChildren();
-            List<CommentListResponseDto.Replies> repliesList = new ArrayList<>();
-            for(Comment childComment : childList) {
-                CommentListResponseDto.Replies reply = mapper.toRepliesDto(childComment);
-                repliesList.add(reply);
-            }
-            CommentListResponseDto commentListResponseDto = mapper.toCommentListDto(comment, repliesList);
+        Board board = findBoard(boardNo);
+        List<Comment> comments = commentRepository.findByBoardAndStatus(board, Status.Y);
 
+        List<CommentListResponseDto> commentListResponseDtoList = new ArrayList<>();
+        for (Comment comment : comments) {
+            List<CommentListResponseDto.Replies> replies = comment.getChildren().stream()
+                    .map(mapper::toReplies)
+                    .collect(Collectors.toList());
+            CommentListResponseDto commentListResponseDto = mapper.toCommentListDto(comment, replies);
             commentListResponseDtoList.add(commentListResponseDto);
         }
         return commentListResponseDtoList;
