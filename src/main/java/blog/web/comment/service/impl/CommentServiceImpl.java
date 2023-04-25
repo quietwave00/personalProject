@@ -68,7 +68,14 @@ public class CommentServiceImpl implements CommentService {
         List<Comment> findCommentList = commentRepository.findByBoardAndStatus(findBoard(boardNo), Status.Y);
         List<CommentListResponseDto> commentListResponseDtoList = new ArrayList<>();
         for(Comment comment : findCommentList) {
-            CommentListResponseDto commentListResponseDto = mapper.toCommentListDto(comment);
+            List<Comment> childList = comment.getChildren();
+            List<CommentListResponseDto.Replies> repliesList = new ArrayList<>();
+            for(Comment childComment : childList) {
+                CommentListResponseDto.Replies reply = mapper.toRepliesDto(childComment);
+                repliesList.add(reply);
+            }
+            CommentListResponseDto commentListResponseDto = mapper.toCommentListDto(comment, repliesList);
+
             commentListResponseDtoList.add(commentListResponseDto);
         }
         return commentListResponseDtoList;

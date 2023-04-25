@@ -6,6 +6,8 @@ import blog.web.comment.controller.dto.request.CreateRepliesRequestDto;
 import blog.web.comment.controller.dto.response.*;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class CommentMapper {
 
@@ -37,12 +39,13 @@ public class CommentMapper {
                 .build();
     }
 
-    public CommentListResponseDto toCommentListDto(Comment comment) {
+    public CommentListResponseDto toCommentListDto(Comment comment, List<CommentListResponseDto.Replies> replies) {
         return CommentListResponseDto.builder()
                 .commentNo(comment.getCommentNo())
                 .userId(comment.getUser().getUserId())
                 .content(comment.getContent())
                 .createdDate(comment.getCreatedDate().toLocalDateTime())
+                .repliesList(replies)
                 .build();
     }
 
@@ -58,6 +61,14 @@ public class CommentMapper {
                 .userId(afterComment.getUser().getUserId())
                 .content(afterComment.getContent())
                 .createDate(afterComment.getCreatedDate().toLocalDateTime())
+                .build();
+    }
+
+    public CommentListResponseDto.Replies toRepliesDto(Comment comment) {
+        return CommentListResponseDto.Replies.builder()
+                .userId(comment.getUser().getUserId())
+                .content(comment.getContent())
+                .createdDate(comment.getCreatedDate().toLocalDateTime())
                 .build();
     }
 }

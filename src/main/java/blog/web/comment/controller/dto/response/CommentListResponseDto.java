@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Builder
@@ -13,4 +14,13 @@ public class CommentListResponseDto {
     private String userId;
     private String content;
     private LocalDateTime createdDate;
+    private List<Replies> repliesList;
+
+    @Builder
+    @Getter
+    public static class Replies {
+        private String userId;
+        private String content;
+        private LocalDateTime createdDate;
+    }
 }
