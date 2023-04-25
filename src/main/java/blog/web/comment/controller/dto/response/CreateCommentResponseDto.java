@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class CreateCommentResponseDto {
+    private Long commentNo;
     private String userId;
     private String content;
     private LocalDateTime createdDate;

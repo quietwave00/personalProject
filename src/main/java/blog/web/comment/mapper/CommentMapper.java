@@ -17,6 +17,7 @@ public class CommentMapper {
 
     public CreateCommentResponseDto toCreateDto(Comment comment) {
         return CreateCommentResponseDto.builder()
+                .commentNo(comment.getCommentNo())
                 .userId(comment.getUser().getUserId())
                 .content(comment.getContent())
                 .createdDate(comment.getCreatedDate().toLocalDateTime())
@@ -53,6 +54,7 @@ public class CommentMapper {
 
     public CreateRepliesResponseDto toCreateRepliesDto(Comment afterComment) {
         return CreateRepliesResponseDto.builder()
+                .commentNo(afterComment.getCommentNo())
                 .userId(afterComment.getUser().getUserId())
                 .content(afterComment.getContent())
                 .createDate(afterComment.getCreatedDate().toLocalDateTime())
