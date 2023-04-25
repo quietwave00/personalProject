@@ -87,3 +87,27 @@
     background-color: rgb(238, 237, 237);
     border-radius: 30px;
 }
+
+.comment-element:hover .replies-button {
+    cursor: pointer;
+    visibility: visible!important;
+}
+
+.replies-input {
+    border: 0px;
+    border-bottom: 3px solid black;
+    width: 400px;
+    margin-left: 150px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.replies-input:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.replies-button {
+    margin-left: 10px;
+    margin-bottom: 3px;
+}

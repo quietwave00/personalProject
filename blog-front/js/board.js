@@ -32,8 +32,6 @@ window.onload = () => {
     onloadData(`http://localhost:8080/blog/user/boards/like/${boardNo}`, (response) => {
         document.getElementById('like-alert-area').innerHTML = `<span id = "like-alert">${response} Like</span>`;
     });
-
-    
 }
 
 const showBoard = (board) => {
@@ -66,19 +64,19 @@ const showBoard = (board) => {
 }
 
 const showComments = (comments) => {
-    console.log("showComments called");
     for(let comment of comments) {
         document.getElementById('comment-elements').innerHTML +=
     `
         <div class = "row comment-element">
+            <input type = "hidden" value = "${comment.commentNo}">
             <div class = "col-2">${comment.userId}</div>
-            <div class = "col-7">${comment.content}</div>
+            <div class = "col-7">${comment.content}
+                <span class = "replies-button" style = "float: right; color: gray; visibility: hidden;" onclick = "showRepliesForm(${comment.commentNo})">↳</span>
+            </div>
             <div class = "col-2 createdDate-area">${comment.createdDate.substr(0, 10)}</div>
         </div>
     `;
     }
-    
-
 }
 
 //Write Comment
@@ -107,8 +105,11 @@ const addComment = (comment) => {
     document.getElementById('comment-elements').innerHTML +=
     `
         <div class = "row comment-element">
+            <input type = "hidden" value = "${comment.commentNo}">
             <div class = "col-2">${comment.userId}</div>
-            <div class = "col-7">${comment.content}</div>
+            <div class = "col-7">${comment.content}
+                <span class = "replies-button" style = "float: right; color: gray; onclick = "showRepliesForm(${comment.commentNo})">↳</span>
+            </div>
             <div class = "col-2 createdDate-area">${comment.createdDate.substr(0, 10)}</div>
         </div>
     `;
@@ -131,7 +132,6 @@ document.getElementById('like-button-area').addEventListener('click', function()
         .then(res => {
             if(res.success == true) {
                 console.log("UnLike Success");
-                // document.getElementById("like-button-area").innerHTML = '<span id = "like-button">♡</span>';
                 document.getElementById('checkLiked').value = false;
                 document.getElementById("like-button").innerHTML = "♡";
                 onloadData(`http://localhost:8080/blog/user/boards/like/${boardNo}`, (response) => {
@@ -176,6 +176,45 @@ for (let i = 0; i < elements.length; i++) {
     });
 }
 
+//Replies Event
+const showRepliesForm = (commentNo) => {
+    console.log("reply commentNo:" + commentNo);
+    const parentElement = document.querySelector(`.comment-element input[value="${commentNo}"]`).parentElement;
+
+    const childDiv = document.createElement('div');
+    childDiv.classList.add('child-div');
+    childDiv.innerHTML = `<input type = "text" class = "replies-input" placeholder = "Write Reply"><button class = "btn btn-sm btn-dark replies-button">write</button>`;
+
+    parentElement.appendChild(childDiv);
+
+    const btn = childDiv.querySelector('.replies-button');
+    btn.addEventListener('click', (e) => {
+        const parentNode = e.target.parentNode;
+        const replyInput = parentNode.querySelector('input');
+        addReplies(commentNo, replyInput);
+    });
+
+    
+}
 
 
-
+const addReplies = (parentNo, replyInput) => {
+    fetch('http://localhost:8080/blog/user/comments/replies', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": localStorage.getItem("Authorization")
+        },
+        body: JSON.stringify({
+            "boardNo": boardNo,
+            "parentNo": parentNo,
+            "content": replyInput.value
+        })
+    })
+    .then((res) => res.json())
+    .then(res => {
+        if(res.success == true) {
+            console.log("add reply success");
+        }
+    });
+}
