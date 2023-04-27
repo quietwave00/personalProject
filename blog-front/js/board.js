@@ -70,12 +70,31 @@ const showComments = (comments) => {
         <div class = "row comment-element">
             <input type = "hidden" value = "${comment.commentNo}">
             <div class = "col-2">${comment.userId}</div>
-            <div class = "col-7">${comment.content}
+            <div class = "col-5">${comment.content}
                 <span class = "replies-button" style = "float: right; color: gray; visibility: hidden;" onclick = "showRepliesForm(${comment.commentNo})">↳</span>
             </div>
             <div class = "col-2 createdDate-area">${comment.createdDate.substr(0, 10)}</div>
         </div>
     `;
+
+        const repliesList = comment.repliesList;
+        for(let reply of repliesList) {
+            const parentElement = document.querySelector(`.comment-element input[value="${comment.commentNo}"]`).parentElement;
+            const repliesDiv = document.createElement('div');
+            repliesDiv.classList.add('reply-list');
+            repliesDiv.innerHTML = 
+            `
+                <div class = "row">
+                    <div class = "col-2">${reply.userId}</div>
+                    <div class = "col-5">${reply.content}
+                        <span class = "replies-button" style = "float: right; color: gray; visibility: hidden;" onclick = "showRepliesForm(${comment.commentNo})">↳</span>
+                    </div>
+                    <div class = "col-2 createdDate-area">${reply.createdDate.substr(0, 10)}</div>
+                </div>
+            `;
+
+            parentElement.appendChild(repliesDiv);
+        }
     }
 }
 
@@ -107,7 +126,7 @@ const addComment = (comment) => {
         <div class = "row comment-element">
             <input type = "hidden" value = "${comment.commentNo}">
             <div class = "col-2">${comment.userId}</div>
-            <div class = "col-7">${comment.content}
+            <div class = "col-5">${comment.content}
                 <span class = "replies-button" style = "float: right; color: gray; onclick = "showRepliesForm(${comment.commentNo})">↳</span>
             </div>
             <div class = "col-2 createdDate-area">${comment.createdDate.substr(0, 10)}</div>
@@ -215,6 +234,7 @@ const addReplies = (parentNo, replyInput) => {
     .then(res => {
         if(res.success == true) {
             console.log("add reply success");
+            // showComments(res.response);
         }
     });
 }
