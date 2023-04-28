@@ -3,6 +3,7 @@ package blog.web.mypage.controller;
 import blog.utils.ApiUtils;
 import blog.utils.dto.ApiResult;
 import blog.web.mypage.controller.dto.response.BoardListOfMyPageResponseDto;
+import blog.web.mypage.controller.dto.response.CommentListOfMyPageResponseDto;
 import blog.web.mypage.service.MyPageService;
 import com.wrapper.spotify.exceptions.SpotifyWebApiException;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +24,15 @@ public class MyPageController {
 
     //내가 쓴 게시글 조회
     @GetMapping("/page/boards")
-    public ApiResult<List<BoardListOfMyPageResponseDto>> selectBoard() throws IOException, ParseException, SpotifyWebApiException {
-        List<BoardListOfMyPageResponseDto> boardListOfMyPageResponseDto = myPageService.selectBoard();
+    public ApiResult<List<BoardListOfMyPageResponseDto>> selectBoards() throws IOException, ParseException, SpotifyWebApiException {
+        List<BoardListOfMyPageResponseDto> boardListOfMyPageResponseDto = myPageService.selectBoards();
         return ApiUtils.success(boardListOfMyPageResponseDto);
+    }
+
+    //내가 쓴 댓글 조회
+    @GetMapping("/page/comments")
+    public ApiResult<List<CommentListOfMyPageResponseDto>> selectComments() {
+        List<CommentListOfMyPageResponseDto> commentListOfMyPageResponseDtoList = myPageService.selectComments();
+        return ApiUtils.success(commentListOfMyPageResponseDtoList);
     }
 }

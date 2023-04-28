@@ -1,11 +1,14 @@
 package blog.web.mypage.mapper;
 
 import blog.domain.entity.Board;
+import blog.domain.entity.Comment;
 import blog.domain.entity.Hashtag;
 import blog.web.mypage.controller.dto.response.BoardListOfMyPageResponseDto;
+import blog.web.mypage.controller.dto.response.CommentListOfMyPageResponseDto;
 import blog.web.spotify.controller.dto.response.DetailsTrackResponseDto;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -17,6 +20,16 @@ public class MyPageMapper {
                 .content(board.getContent())
                 .hashtagList(board.getHashtagList().stream().map(Hashtag::getName).collect(Collectors.toList()))
                 .title(detailsTrackResponseDto.getTitle())
+                .createdDate(board.getCreatedDate().toLocalDateTime())
+                .build();
+    }
+
+    public CommentListOfMyPageResponseDto toCommentListDto(Comment comment) {
+        return CommentListOfMyPageResponseDto.builder()
+                .boardNo(comment.getBoard().getBoardNo())
+                .commentNo(comment.getCommentNo())
+                .content(comment.getContent())
+                .createdDate(comment.getCreatedDate().toLocalDateTime())
                 .build();
     }
 }
