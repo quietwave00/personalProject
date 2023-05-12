@@ -7,6 +7,7 @@ import blog.domain.entity.User;
 import blog.exception.ErrorCode;
 import blog.jwt.UserContextHolder;
 import blog.utils.dto.ApiError;
+//import blog.web.alert.repository.AlertRepository;
 import blog.web.board.repository.BoardRepository;
 import blog.web.comment.controller.dto.request.CreateCommentRequestDto;
 import blog.web.comment.controller.dto.request.CreateRepliesRequestDto;
@@ -32,6 +33,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+//    private final AlertRepository alertRepository;
     private final CommentMapper mapper;
 
     @Override
@@ -67,10 +69,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentListResponseDto> select(Long boardNo) {
         Board board = findBoard(boardNo);
-        List<Comment> comments = commentRepository.findByBoardAndStatus(board, Status.Y);
+        List<Comment> commentList = commentRepository.findByBoardAndStatusAndParentIsNull(board, Status.Y);
 
         List<CommentListResponseDto> commentListResponseDtoList = new ArrayList<>();
-        for (Comment comment : comments) {
+        for (Comment comment : commentList) {
             List<CommentListResponseDto.Replies> replies = comment.getChildren().stream()
                     .map(mapper::toReplies)
                     .collect(Collectors.toList());

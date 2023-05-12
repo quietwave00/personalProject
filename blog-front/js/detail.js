@@ -17,7 +17,7 @@ window.onload = () => {
     })
 
     //Select Board
-    fetch('http://localhost:8080/blog/user/boards/' + trackId, {
+    fetch('http://localhost:8080/blog/user/boards/' + trackId + "/byOrder", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
