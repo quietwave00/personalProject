@@ -1,13 +1,11 @@
 package blog.web.comment.service.impl;
 
-import blog.domain.entity.Board;
-import blog.domain.entity.Comment;
-import blog.domain.entity.Status;
-import blog.domain.entity.User;
+import blog.domain.entity.*;
 import blog.exception.ErrorCode;
 import blog.jwt.UserContextHolder;
 import blog.utils.dto.ApiError;
-//import blog.web.alert.repository.AlertRepository;
+import blog.web.alert.mapper.AlertMapper;
+import blog.web.alert.repository.AlertRepository;
 import blog.web.board.repository.BoardRepository;
 import blog.web.comment.controller.dto.request.CreateCommentRequestDto;
 import blog.web.comment.controller.dto.request.CreateRepliesRequestDto;
@@ -19,6 +17,7 @@ import blog.web.comment.repository.CommentRepository;
 import blog.web.comment.service.CommentService;
 import blog.web.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -33,8 +32,13 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
-//    private final AlertRepository alertRepository;
+
+
+    private final AlertRepository alertRepository;
+
     private final CommentMapper mapper;
+    private final AlertMapper alertMapper;
+
 
     @Override
     public CreateCommentResponseDto create(CreateCommentRequestDto createCommentRequestDto) {
@@ -46,6 +50,8 @@ public class CommentServiceImpl implements CommentService {
         beforeComment.addUser(findUser);
 
         Comment afterComment = commentRepository.save(beforeComment);
+
+        alertRepository.save(alertMapper.commentToAlert(afterComment));
 
         return mapper.toCreateDto(afterComment);
     }
