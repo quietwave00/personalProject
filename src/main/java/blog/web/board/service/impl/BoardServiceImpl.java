@@ -2,6 +2,7 @@ package blog.web.board.service.impl;
 
 import blog.domain.entity.*;
 import blog.jwt.UserContextHolder;
+//import blog.web.alert.repository.AlertRepository;
 import blog.web.board.controller.dto.response.GetBoardByHashtagResponseDto;
 import blog.web.hashtag.mapper.HashtagMapper;
 import blog.web.hashtag.repository.HashtagRepository;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class BoardServiceImpl implements BoardService {
+//    private final AlertRepository alertRepository;
 
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
@@ -40,6 +42,7 @@ public class BoardServiceImpl implements BoardService {
 
 
 
+    @Transactional
     @Override
     public CreateBoardResponseDto create(CreateBoardRequestDto createBoardRequestDto) {
         User findUser = findUser(UserContextHolder.getUserId());
@@ -48,8 +51,11 @@ public class BoardServiceImpl implements BoardService {
         beforeBoard.addUser(findUser);
         beforeBoard.addHashtag(hashtagList);
         Board afterBoard = boardRepository.save(beforeBoard);
+        alertSave(afterBoard);
+
         return mapper.toCreateDto(afterBoard);
     }
+
 
     @Override
     public UpdateBoardResponseDto update(UpdateBoardRequestDto updateBoardRequestDto) {
@@ -91,23 +97,22 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public List<BoardOfTrackResponseDto> selectBoardOfTrack(String trackId, String order) {
+        List<Board> boardList;
+        List<BoardOfTrackResponseDto> boardOfTrackResponseDtoList = new ArrayList<>();
         if("byOrder".equals(order)) {
-            List<Board> boardList = boardRepository.findByStatusAndTrackIdOrderByBoardNoDesc(Status.Y, trackId);
-            List<BoardOfTrackResponseDto> boardOfTrackResponseDtoList = new ArrayList<>();
+            boardList = boardRepository.findByStatusAndTrackIdOrderByBoardNoDesc(Status.Y, trackId);
             for(Board board : boardList) {
                 BoardOfTrackResponseDto boardOfTrackResponseDto = mapper.toBoardOfTrackDto(board);
                 boardOfTrackResponseDtoList.add(boardOfTrackResponseDto);
             }
-            return boardOfTrackResponseDtoList;
         } else {
-            List<Board> boardList = likeRepository.countByBoardGroupByBoard();
-            List<BoardOfTrackResponseDto> boardOfTrackResponseDtoList = new ArrayList<>();
+            boardList = likeRepository.countByBoardGroupByBoard();
             for(Board board : boardList) {
                 BoardOfTrackResponseDto boardOfTrackResponseDto = mapper.toBoardOfTrackDto(board);
                 boardOfTrackResponseDtoList.add(boardOfTrackResponseDto);
             }
-            return boardOfTrackResponseDtoList;
         }
+        return boardOfTrackResponseDtoList;
 
     }
 
@@ -196,5 +201,11 @@ public class BoardServiceImpl implements BoardService {
         }
         return hashtagList;
     }
+
+    private void alertSave(Board board) {
+//        alertRepository.save(board)
+    }
+
+
 
 }
