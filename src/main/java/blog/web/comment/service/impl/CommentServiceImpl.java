@@ -17,7 +17,6 @@ import blog.web.comment.repository.CommentRepository;
 import blog.web.comment.service.CommentService;
 import blog.web.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -50,9 +49,6 @@ public class CommentServiceImpl implements CommentService {
         beforeComment.addUser(findUser);
 
         Comment afterComment = commentRepository.save(beforeComment);
-
-        alertRepository.save(alertMapper.commentToAlert(afterComment));
-
         return mapper.toCreateDto(afterComment);
     }
 
@@ -100,6 +96,7 @@ public class CommentServiceImpl implements CommentService {
         beforeComment.addParent(findParent);
 
         Comment afterComment = commentRepository.save(beforeComment);
+        alertRepository.save(alertMapper.commentToAlert(afterComment));
 
         return mapper.toCreateRepliesDto(afterComment);
     }

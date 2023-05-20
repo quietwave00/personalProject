@@ -111,6 +111,7 @@ public class BoardServiceImpl implements BoardService {
                 BoardOfTrackResponseDto boardOfTrackResponseDto = mapper.toBoardOfTrackDto(board);
                 boardOfTrackResponseDtoList.add(boardOfTrackResponseDto);
             }
+
         }
         return boardOfTrackResponseDtoList;
 
