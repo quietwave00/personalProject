@@ -5,6 +5,7 @@ import blog.domain.entity.Comment;
 import blog.domain.entity.Hashtag;
 import blog.web.mypage.controller.dto.response.BoardListOfMyPageResponseDto;
 import blog.web.mypage.controller.dto.response.CommentListOfMyPageResponseDto;
+import blog.web.mypage.controller.dto.response.LikedListOfMyPageResponseDto;
 import blog.web.spotify.controller.dto.response.DetailsTrackResponseDto;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +31,14 @@ public class MyPageMapper {
                 .commentNo(comment.getCommentNo())
                 .content(comment.getContent())
                 .createdDate(comment.getCreatedDate().toLocalDateTime())
+                .build();
+    }
+
+    public LikedListOfMyPageResponseDto toLikedListOfMyPageDto(Board board) {
+        return LikedListOfMyPageResponseDto.builder()
+                .boardNo(board.getBoardNo())
+                .content(board.getContent())
+                .nickname(board.getUser().getNickname())
                 .build();
     }
 }

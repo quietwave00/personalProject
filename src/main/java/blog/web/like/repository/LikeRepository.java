@@ -17,4 +17,5 @@ public interface LikeRepository extends JpaRepository<Like, Long>, CustomLikeRep
 
     Boolean existsByBoardAndUser(Board findBoard, User findUser);
 
+    List<Like> findByUser(User findUser);
 }
