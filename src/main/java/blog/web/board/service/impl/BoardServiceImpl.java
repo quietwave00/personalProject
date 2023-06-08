@@ -117,6 +117,8 @@ public class BoardServiceImpl implements BoardService {
 
     }
 
+
+    @Transactional
     @Override
     public String likeBoard(Long boardNo) {
         Board findBoard = findBoard(boardNo);
