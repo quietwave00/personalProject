@@ -60,7 +60,7 @@ public class CommentMapper {
                 .commentNo(afterComment.getCommentNo())
                 .userId(afterComment.getUser().getUserId())
                 .content(afterComment.getContent())
-                .createDate(afterComment.getCreatedDate().toLocalDateTime())
+                .createdDate(afterComment.getCreatedDate().toLocalDateTime())
                 .build();
     }
 

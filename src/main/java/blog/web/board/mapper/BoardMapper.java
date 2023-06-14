@@ -25,9 +25,11 @@ public class BoardMapper {
 
     public CreateBoardResponseDto toCreateDto(Board board) {
         return CreateBoardResponseDto.builder()
+                .boardNo(board.getBoardNo())
                 .content(board.getContent())
                 .userId(board.getUser().getUserId())
                 .createdDate(board.getCreatedDate().toLocalDateTime())
+                .tagList(board.getHashtagList().stream().map(Hashtag::getName).collect(Collectors.toList()))
                 .build();
     }
 
