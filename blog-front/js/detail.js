@@ -28,7 +28,7 @@ window.onload = () => {
     .then(res => {
         if(res.success == true) {
             console.log("select board Success");
-            showBoard(res.response);
+            showBoards(res.response);
         }
     })
 }
@@ -65,7 +65,7 @@ const showTrack = (track) => {
             `;
 }
 
-const showBoard = (boardList) => {
+const showBoards = (boardList) => {
     for(let board of boardList) {
         let boardNo = board.boardNo;
         let tagList = board.tagList;
@@ -93,6 +93,36 @@ const showBoard = (boardList) => {
     }
     moveDetails();
 }
+
+const showBoard = (board) => {
+    let boardNo = board.boardNo;
+    console.log("boardNo???: " + boardNo);
+    let tagList = board.tagList;
+    let content = board.content;
+
+    let tagElements = "";
+    for(let tag of tagList) {
+        tagElements += 
+                `
+                <div class = "tag-element">#${tag}</div>
+                `;
+    }
+    const boardElementArea = document.getElementById('board-element-area');
+    boardElementArea.insertAdjacentHTML('afterbegin', `
+        <div class="col-5 board-element">
+            <div class="row">
+                <div>
+                    <input type="hidden" class="board-no" value="${boardNo}">
+                    <div class="tag-area">${tagElements}</div>
+                    <div class="content-area">${content}</div>
+                </div>
+            </div>
+        </div>
+        `);
+        document.getElementById('hashtag-container').innerHTML = "";
+        document.getElementById('board-input').value = "";
+        moveDetails();
+    }
 
 //Hashtag Event
 const hashtagArray = [];
@@ -166,6 +196,8 @@ document.getElementById('write-button').addEventListener('click', function() {
                     alertDiv.style.display = 'none';
                 }
             }, 10);
+            console.log("Board: " + JSON.stringify(res.response));
+            showBoard(res.response);
         }
     })
 });
