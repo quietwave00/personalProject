@@ -22,10 +22,8 @@ window.onload = () => {
         console.log("like check: " + response);
         document.getElementById("like-button-area").innerHTML = `<input type = "hidden" id = "checkLiked" value = ${response}>`;
         if (response == true) {
-            console.log("꽉찬하트");
             document.getElementById("like-button-area").innerHTML += '<span id = "like-button">♥︎</span>';
         } else {
-            console.log("빈하트");
             document.getElementById("like-button-area").innerHTML += '<span id = "like-button">♡</span>';
         }
     });
@@ -63,41 +61,6 @@ const showBoard = (board) => {
         `;
 }
 
-const showComments = (comments) => {
-    for(let comment of comments) {
-        document.getElementById('comment-elements').innerHTML +=
-    `
-        <div class = "row comment-element">
-            <input type = "hidden" value = "${comment.commentNo}">
-            <div class = "col-2">${comment.userId}</div>
-            <div class = "col-5">${comment.content}
-                <span class = "replies-button" style = "float: right; color: gray; visibility: hidden;" onclick = "showRepliesForm(${comment.commentNo})">↳</span>
-            </div>
-            <div class = "col-2 createdDate-area">${comment.createdDate.substr(0, 10)}</div>
-        </div>
-    `;
-
-        const repliesList = comment.repliesList;
-        for(let reply of repliesList) {
-            const parentElement = document.querySelector(`.comment-element input[value="${comment.commentNo}"]`).parentElement;
-            const repliesDiv = document.createElement('div');
-            repliesDiv.classList.add('reply-list');
-            repliesDiv.innerHTML = 
-            `
-                <div class = "row">
-                    <div class = "col-2">${reply.userId}</div>
-                    <div class = "col-5">${reply.content}
-                        <span class = "replies-button" style = "float: right; color: gray; visibility: hidden;" onclick = "showRepliesForm(${comment.commentNo})">↳</span>
-                    </div>
-                    <div class = "col-2 createdDate-area">${reply.createdDate.substr(0, 10)}</div>
-                </div>
-            `;
-
-            parentElement.appendChild(repliesDiv);
-        }
-    }
-}
-
 //Write Comment
 document.getElementById('comment-write-button').addEventListener('click', () => {
     fetch('http://localhost:8080/blog/user/comments', {
@@ -114,19 +77,56 @@ document.getElementById('comment-write-button').addEventListener('click', () => 
     .then((res) => res.json())
     .then(res => {
         if(res.success == true) {
-            addComment(res.response);
+            showComment(res.response);
             document.getElementById('comment-input').value = "";
         }
     })
 });
 
-const addComment = (comment) => {
+//Show Comment List
+const showComments = (comments) => {
+    for(let comment of comments) {
+        document.getElementById('comment-elements').innerHTML +=
+    `
+        <div class = "row comment-element">
+            <input type = "hidden" class = "commentNo" value = "${comment.commentNo}">
+            <div class = "col-2">${comment.userId}</div>
+            <div class = "col-6">${comment.content}
+                <span class = "replies-button" style = "float: right; color: gray; visibility: hidden;" onclick = "showRepliesForm(${comment.commentNo})">↳</span>
+            </div>
+            <div class = "col-2 createdDate-area">${comment.createdDate.substr(0, 10)}</div>
+        </div>
+    `;
+
+        const repliesList = comment.repliesList;
+        for(let reply of repliesList) {
+            const parentElement = document.querySelector(`.comment-element input[value="${comment.commentNo}"]`).parentElement;
+            const repliesDiv = document.createElement('div');
+            repliesDiv.classList.add('reply-list');
+            repliesDiv.innerHTML = 
+            `
+                <div class = "row">
+                    <div class = "col-2">${reply.userId}</div>
+                    <div class = "col-6">${reply.content}
+                        <span class = "replies-button" style = "float: right; color: gray; visibility: hidden;" onclick = "showRepliesForm(${comment.commentNo})">↳</span>
+                    </div>
+                    <div class = "col-2 createdDate-area">${reply.createdDate.substr(0, 10)}</div>
+                </div>
+            `;
+            parentElement.appendChild(repliesDiv);
+        }
+    }
+}
+
+//Show Comment
+const showComment = (comment) => {
+    console.log("comment when insert reply: " + JSON.stringify(comment));
     document.getElementById('comment-elements').innerHTML +=
     `
         <div class = "row comment-element">
             <input type = "hidden" value = "${comment.commentNo}">
             <div class = "col-2">${comment.userId}</div>
-            <div class = "col-5">${comment.content}
+            <div class = "col-6">${comment.content}
                 <span class = "replies-button" style = "float: right; color: gray; onclick = "showRepliesForm(${comment.commentNo})">↳</span>
             </div>
             <div class = "col-2 createdDate-area">${comment.createdDate.substr(0, 10)}</div>
@@ -196,10 +196,9 @@ for (let i = 0; i < elements.length; i++) {
 }
 
 //Replies Event
+//Show Reply Form
 const showRepliesForm = (commentNo) => {
-    console.log("reply commentNo:" + commentNo);
     const parentElement = document.querySelector(`.comment-element input[value="${commentNo}"]`).parentElement;
-
     const childDiv = document.createElement('div');
     childDiv.classList.add('child-div');
     childDiv.innerHTML = `<input type = "text" class = "replies-input" placeholder = "Write Reply"><button class = "btn btn-sm btn-dark replies-button">write</button>`;
@@ -216,7 +215,7 @@ const showRepliesForm = (commentNo) => {
     
 }
 
-
+//Add Reply
 const addReplies = (parentNo, replyInput) => {
     fetch('http://localhost:8080/blog/user/comments/replies', {
         method: 'POST',
@@ -234,8 +233,30 @@ const addReplies = (parentNo, replyInput) => {
     .then(res => {
         if(res.success == true) {
             console.log("add reply success");
-            // showComments(res.response);
+            showReply(parentNo, res.response);
         }
     });
+}
+
+//Show Reply
+const showReply = (parentNo, reply) => {
+    const parentElement = document.querySelector(`.comment-element input[value="${parentNo}"]`).parentElement;
+            const repliesDiv = document.createElement('div');
+            repliesDiv.classList.add('reply-list');
+            repliesDiv.innerHTML = 
+            `
+                <div class = "row">
+                    <div class = "col-2">${reply.userId}</div>
+                    <div class = "col-6">${reply.content}
+                        <span class = "replies-button" style = "float: right; color: gray; visibility: hidden;" onclick = "showRepliesForm(${parentNo})">↳</span>
+                    </div>
+                    <div class = "col-2 createdDate-area">${reply.createdDate.substr(0, 10)}</div>
+                </div>
+            `;
+            const elements = document.getElementsByClassName("child-div");
+            for (let i = 0; i < elements.length; i++) {
+                elements[i].style.display = "none";
+            }
+            parentElement.appendChild(repliesDiv);
 }
 
