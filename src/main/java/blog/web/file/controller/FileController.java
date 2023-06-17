@@ -1,5 +1,6 @@
 package blog.web.file.controller;
 
+import blog.web.file.controller.dto.response.UploadResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,13 +13,14 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/blog/user")
 public class FileController {
 
     private final FileService fileService;
 
-    @PostMapping("/files")
-    public ApiResult<List<String>> upload(@RequestPart List<MultipartFile> multipartFileList) throws IOException {
-        List<String> filePathList = fileService.upload(multipartFileList);
+    @PostMapping("/files/{boardNo}")
+    public ApiResult<List<UploadResponseDto>> upload(@RequestPart List<MultipartFile> multipartFileList, @PathVariable("boardNo") Long boardNo) throws IOException {
+        List<UploadResponseDto> filePathList = fileService.upload(multipartFileList, boardNo);
         return ApiUtils.success(filePathList);
     }
 

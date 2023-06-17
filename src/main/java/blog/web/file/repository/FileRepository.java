@@ -1,7 +1,7 @@
-package project.blog.file.repository;
+package blog.web.file.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import project.blog.domain.entity.File;
+import blog.domain.entity.File;
 
 public interface FileRepository extends JpaRepository<File, Long> {
 
