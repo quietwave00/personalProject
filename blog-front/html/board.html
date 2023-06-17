@@ -40,6 +40,24 @@
         </div>
       </header>
     <div id = "board-area"></div>
+    <div id = "modal-area">
+      <div class="modal fade" id="boardListByHashtagModal" tabindex="-1">
+          <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+              <div class="header" style = "padding: 10px; text-align: right;">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <h4 align="center" style="font-style: italic; margin-bottom: 40px;">같은 주제로 이야기 중...</h4>
+                <div id = "board-element-area"></div>
+              </div>
+              <div class="footer" style = "padding: 20px; text-align: right;">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+  </div>
     <div id = "like-area">
         <div id = "like-button-area">
             <span id = "like-button">♡</span>

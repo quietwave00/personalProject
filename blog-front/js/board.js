@@ -43,7 +43,7 @@ const showBoard = (board) => {
     for(let tag of tagList) {
         tagElements += 
             `
-            <div class = "tag-elements">#${tag}</div>
+            <div class = "tag-elements" onclick="getBoardListByHashtag(\'${tag}\')" data-bs-toggle="modal" data-bs-target="#boardListByHashtagModal">#${tag}</div>
             `;
     }
 
@@ -60,6 +60,8 @@ const showBoard = (board) => {
             </div>
         `;
 }
+
+
 
 //Write Comment
 document.getElementById('comment-write-button').addEventListener('click', () => {
@@ -91,7 +93,7 @@ const showComments = (comments) => {
         <div class = "row comment-element">
             <input type = "hidden" class = "commentNo" value = "${comment.commentNo}">
             <div class = "col-2">${comment.userId}</div>
-            <div class = "col-6">${comment.content}
+            <div class = "col-4">${comment.content}
                 <span class = "replies-button" style = "float: right; color: gray; visibility: hidden;" onclick = "showRepliesForm(${comment.commentNo})">↳</span>
             </div>
             <div class = "col-2 createdDate-area">${comment.createdDate.substr(0, 10)}</div>
@@ -107,7 +109,7 @@ const showComments = (comments) => {
             `
                 <div class = "row">
                     <div class = "col-2">${reply.userId}</div>
-                    <div class = "col-6">${reply.content}
+                    <div class = "col-4">${reply.content}
                         <span class = "replies-button" style = "float: right; color: gray; visibility: hidden;" onclick = "showRepliesForm(${comment.commentNo})">↳</span>
                     </div>
                     <div class = "col-2 createdDate-area">${reply.createdDate.substr(0, 10)}</div>
@@ -126,9 +128,8 @@ const showComment = (comment) => {
         <div class = "row comment-element">
             <input type = "hidden" value = "${comment.commentNo}">
             <div class = "col-2">${comment.userId}</div>
-            <div class = "col-6">${comment.content}
-                <span class = "replies-button" style = "float: right; color: gray; onclick = "showRepliesForm(${comment.commentNo})">↳</span>
-            </div>
+            <div class = "col-4">${comment.content}</div>
+            <div class = "col-1"><span class = "replies-button" style = "float: right; color: gray; onclick = "showRepliesForm(${comment.commentNo})">↳</span>
             <div class = "col-2 createdDate-area">${comment.createdDate.substr(0, 10)}</div>
         </div>
     `;
@@ -187,13 +188,6 @@ document.getElementById('like-button-area').addEventListener('click', function()
     }
 });
 
-//Hashtag Event
-const elements = document.getElementsByClassName('tag-elements');
-for (let i = 0; i < elements.length; i++) {
-    elements[i].addEventListener('click', (e) => {
-        console.log("hashtag click");
-    });
-}
 
 //Replies Event
 //Show Reply Form
@@ -201,7 +195,7 @@ const showRepliesForm = (commentNo) => {
     const parentElement = document.querySelector(`.comment-element input[value="${commentNo}"]`).parentElement;
     const childDiv = document.createElement('div');
     childDiv.classList.add('child-div');
-    childDiv.innerHTML = `<input type = "text" class = "replies-input" placeholder = "Write Reply"><button class = "btn btn-sm btn-dark replies-button">write</button>`;
+    childDiv.innerHTML = `<input type = "text" class = "replies-input" placeholder = "Write Reply"><button class = "btn btn-sm btn-dark reply-input-btn">write</button>`;
 
     parentElement.appendChild(childDiv);
 
@@ -246,8 +240,8 @@ const showReply = (parentNo, reply) => {
             repliesDiv.innerHTML = 
             `
                 <div class = "row">
-                    <div class = "col-2">${reply.userId}</div>
-                    <div class = "col-6">${reply.content}
+                    <div class = "col-1">${reply.userId}</div>
+                    <div class = "col-4">${reply.content}
                         <span class = "replies-button" style = "float: right; color: gray; visibility: hidden;" onclick = "showRepliesForm(${parentNo})">↳</span>
                     </div>
                     <div class = "col-2 createdDate-area">${reply.createdDate.substr(0, 10)}</div>
@@ -258,5 +252,55 @@ const showReply = (parentNo, reply) => {
                 elements[i].style.display = "none";
             }
             parentElement.appendChild(repliesDiv);
+}
+
+//Hashtag Event
+const getBoardListByHashtag = (tag) => {
+    fetch('http://localhost:8080/blog/user/hashtag/' + tag, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": localStorage.getItem("Authorization")
+        }
+    })
+    .then((res) => res.json())
+    .then((res) => {
+        if (res.success === true) {
+            showBoardListByHashtag(res.response);
+        }
+    });
+}
+
+const showBoardListByHashtag = (boardList) => {
+    document.getElementById('board-element-area').innerHTML = "";
+    for(let board of boardList) {
+        document.getElementById('board-element-area').innerHTML += 
+            `
+            <div class = "board-element">
+                <div class = "row">
+                    <div>
+                        <input type = "hidden" class = "board-no" value = "${board.boardNo}">
+                        <div class = "content-area">${board.content}</div>
+                        <div class = "nickname-area">${board.nickname}</div>
+                    </div>
+                </div>
+            </div>
+            `;
+    }
+    moveDetails();
+}
+
+//Move To The Board
+const moveDetails = () => {
+    console.log("move to board Called");
+    const boardElements = document.getElementsByClassName('board-element');
+
+    for(let element of boardElements) {
+        element.addEventListener('click', (e) => {
+            const boardNo = e.currentTarget.querySelector('.board-no').value;
+            console.log("select boardNo: " + boardNo);
+            window.location.href = `board.html?boardNo=${boardNo}`;
+        })
+    }
 }
 

@@ -9,6 +9,6 @@ import java.util.List;
 @Getter
 public class GetBoardByHashtagResponseDto {
     private Long boardNo;
-    private List<String> tagList;
     private String content;
+    private String nickname;
 }

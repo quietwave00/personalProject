@@ -57,7 +57,7 @@ const showTrack = (track) => {
                                 <span style = "color: gray; font-weight: bold;">Album</span> <span class = "album">${album}</span>
                             </div>
                             <div class = "col-7">
-                                <input type = "button" class="btn btn-dark" value = "write" id = "modal-button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                <input type = "button" class="btn btn-dark" value = "write" id = "modal-button" data-bs-toggle="modal" data-bs-target="#boardModal">
                             </div>
                         </div>
                     </div>        
@@ -96,7 +96,6 @@ const showBoards = (boardList) => {
 
 const showBoard = (board) => {
     let boardNo = board.boardNo;
-    console.log("boardNo???: " + boardNo);
     let tagList = board.tagList;
     let content = board.content;
 
