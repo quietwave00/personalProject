@@ -5,13 +5,17 @@ import blog.domain.entity.FileLevel;
 import blog.exception.ErrorCode;
 import blog.utils.dto.ApiError;
 import blog.web.board.repository.BoardRepository;
-import blog.web.file.controller.dto.response.UploadResponseDto;
+import blog.web.file.controller.dto.request.UpdateFileRequestDto;
+import blog.web.file.controller.dto.response.UpdateFileResponseDto;
+import blog.web.file.controller.dto.response.UploadFileResponseDto;
 import blog.web.file.mapper.FileMapper;
+import blog.web.file.service.dto.SaveFileDto;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,9 +26,11 @@ import blog.web.file.service.FileService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FileServiceImpl implements FileService {
 
     private final FileRepository fileRepository;
@@ -37,10 +43,34 @@ public class FileServiceImpl implements FileService {
     private String S3Bucket;
 
 
+    @Override
+    public List<UploadFileResponseDto> upload(List<MultipartFile> multipartFileList, Long boardNo) throws IOException {
+        List<UploadFileResponseDto> uploadFileResponseDtoList = new ArrayList<>();
+        List<SaveFileDto> saveFileDtoList = getS3File(multipartFileList);
+        for (SaveFileDto saveFileDto : saveFileDtoList) {
+            Board findBoard = findBoard(boardNo);
+            FileLevel fileLevel = (saveFileDto.getIndex() == 0) ? FileLevel.MAIN : FileLevel.SUB;
+            File createFile = new File().createFile(saveFileDto.getOriginalName(), fileLevel, saveFileDto.getFilePath(), findBoard);
+            File savedFile = fileRepository.save(createFile);
+            UploadFileResponseDto uploadFileResponseDto = fileMapper.toUploadDto(savedFile);
+            uploadFileResponseDtoList.add(uploadFileResponseDto);
+        }
+        return uploadFileResponseDtoList;
+    }
 
     @Override
-    public List<UploadResponseDto> upload(List<MultipartFile> multipartFileList, Long boardNo) throws IOException {
-        List<UploadResponseDto> uploadResponseDtoList = new ArrayList<>();
+    public List<UpdateFileResponseDto> update(UpdateFileRequestDto updateFileRequestDto) throws IOException {
+
+
+
+
+
+        return null;
+    }
+
+    //단일 메소드
+    private List<SaveFileDto> getS3File(List<MultipartFile> multipartFileList) throws IOException {
+        List<SaveFileDto> saveFileDtoList = new ArrayList<>();
         for(int i = 0; i < multipartFileList.size(); i++) {
             MultipartFile multipartFile = multipartFileList.get(i);
             String originalName = multipartFile.getOriginalFilename();
@@ -54,28 +84,28 @@ public class FileServiceImpl implements FileService {
                     new PutObjectRequest(S3Bucket, originalName, multipartFile.getInputStream(), objectMetadata)
                             .withCannedAcl(CannedAccessControlList.PublicRead)
             );
-
-            String filePath = amazonS3Client.getUrl(S3Bucket, originalName).toString(); //접근 가능 url
-            //저장
-            Board findBoard = findBoard(boardNo);
-            File savedFile;
-            File createFile;
-            if(i == 0) {
-                createFile = new File().createFile(originalName, FileLevel.MAIN, filePath, findBoard);
-            } else {
-                createFile = new File().createFile(originalName, FileLevel.SUB, filePath, findBoard);
-            }
-            savedFile = fileRepository.save(createFile);
-            UploadResponseDto uploadResponseDto = fileMapper.toUploadDto(savedFile);
-            uploadResponseDtoList.add(uploadResponseDto);
+            saveFileDtoList.add(new SaveFileDto(i, originalName, amazonS3Client.getUrl(S3Bucket, originalName).toString()));
         }
-
-        return uploadResponseDtoList;
+        return saveFileDtoList;
     }
 
-    //단일 메소드
     private Board findBoard(Long boardNo) {
         return boardRepository.findByBoardNo(boardNo)
                 .orElseThrow(() -> new ApiError(ErrorCode.BOARD_NOT_FOUND));
     }
+
+    private List<File> findFileByBoard(Board board) {
+        return fileRepository.findByBoard(board)
+                .orElseThrow(() -> new ApiError(ErrorCode.BOARD_NOT_FOUND));
+    }
+
+    private File findFile(Long fileNo) {
+        return fileRepository.findByFileNo(fileNo)
+                .orElseThrow(() -> new ApiError(ErrorCode.FILE_NOT_FOUND));
+    }
+
+
+
+
+
 }

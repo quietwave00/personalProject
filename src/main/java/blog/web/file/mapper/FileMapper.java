@@ -1,13 +1,13 @@
 package blog.web.file.mapper;
 
 import blog.domain.entity.File;
-import blog.web.file.controller.dto.response.UploadResponseDto;
+import blog.web.file.controller.dto.response.UploadFileResponseDto;
 import org.springframework.stereotype.Component;
 
 @Component
 public class FileMapper {
-    public UploadResponseDto toUploadDto(File file) {
-        return UploadResponseDto.builder()
+    public UploadFileResponseDto toUploadDto(File file) {
+        return UploadFileResponseDto.builder()
                 .fileNo(file.getFileNo())
                 .filePath(file.getFilePath())
                 .fileLevel(file.getFileLevel())
