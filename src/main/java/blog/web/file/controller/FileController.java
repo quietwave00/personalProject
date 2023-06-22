@@ -1,6 +1,7 @@
 package blog.web.file.controller;
 
 import blog.web.file.controller.dto.request.UpdateFileRequestDto;
+import blog.web.file.controller.dto.response.GetMainFileByBoardResponseDto;
 import blog.web.file.controller.dto.response.UpdateFileResponseDto;
 import blog.web.file.controller.dto.response.UploadFileResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,14 @@ public class FileController {
         List<UpdateFileResponseDto> updateFileResponseDtoList = fileService.update(updateFileRequestDto);
         return ApiUtils.success(updateFileResponseDtoList);
     }
+
+    @GetMapping("/files/main/{boardNo}")
+    public ApiResult<List<GetMainFileByBoardResponseDto>> getFiles(@PathVariable("boardNo") Long boardNo) {
+        List<GetMainFileByBoardResponseDto> getFileByBoardResponseDtoList = fileService.get(boardNo);
+        return ApiUtils.success(getFileByBoardResponseDtoList);
+    }
+
+
 
 
 

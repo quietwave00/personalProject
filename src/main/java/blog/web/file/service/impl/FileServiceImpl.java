@@ -6,6 +6,7 @@ import blog.exception.ErrorCode;
 import blog.utils.dto.ApiError;
 import blog.web.board.repository.BoardRepository;
 import blog.web.file.controller.dto.request.UpdateFileRequestDto;
+import blog.web.file.controller.dto.response.GetMainFileByBoardResponseDto;
 import blog.web.file.controller.dto.response.UpdateFileResponseDto;
 import blog.web.file.controller.dto.response.UploadFileResponseDto;
 import blog.web.file.mapper.FileMapper;
@@ -27,6 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -60,12 +62,46 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public List<UpdateFileResponseDto> update(UpdateFileRequestDto updateFileRequestDto) throws IOException {
+        Board findBoard = findBoard(updateFileRequestDto.getBoardNo());
+        List<File> checkFileList = findFileByBoard(findBoard);
 
+        //기존 게시물별 파일의 pk값
+        List<Long> getFileNoByBoardList = checkFileList.stream()
+                .map(File::getFileNo)
+                .collect(Collectors.toList());
 
+        //클라이언트가 삭제한 파일의 pk값(s3에는 추후에 삭제)
+        for(int i = 0; i < updateFileRequestDto.getFileNoList().size(); i++) {
+            if(!Objects.equals(getFileNoByBoardList.get(i), updateFileRequestDto.getFileNoList().get(i))) {
+                Long fileNo = getFileNoByBoardList.get(i);
+                findFile(fileNo).deleteFile();
+            }
+        }
 
+        //새로운 file을 저장
+        List<MultipartFile> multipartFileList = updateFileRequestDto.getMultipartFileList();
+        List<UpdateFileResponseDto> updateFileResponseDtoList = new ArrayList<>();
+        List<SaveFileDto> saveFileDtoList = getS3File(multipartFileList);
+        for(SaveFileDto saveFileDto : saveFileDtoList) {
+            FileLevel fileLevel = (saveFileDto.getIndex() == 0) ? FileLevel.MAIN : FileLevel.SUB;
+            File createFile = new File().createFile(saveFileDto.getOriginalName(), fileLevel, saveFileDto.getFilePath(), findBoard);
+            File savedFile = fileRepository.save(createFile);
+            updateFileResponseDtoList.add(fileMapper.toUpdateDto(savedFile));
+        }
+        return updateFileResponseDtoList;
+    }
 
-
-        return null;
+    @Override
+    public List<GetMainFileByBoardResponseDto> get(Long boardNo) {
+        Board findBoard = findBoard(boardNo);
+        List<File> findFileByBoardList = findFileByBoard(findBoard);
+        List<GetMainFileByBoardResponseDto> getMainFileByBoardResponseDtoList = new ArrayList<>();
+        for(File file : findFileByBoardList) {
+            if(file.getFileLevel() == FileLevel.MAIN) {
+                getMainFileByBoardResponseDtoList.add(fileMapper.toGetMainDto(file));
+            }
+        }
+        return getMainFileByBoardResponseDtoList;
     }
 
     //단일 메소드
@@ -96,16 +132,11 @@ public class FileServiceImpl implements FileService {
 
     private List<File> findFileByBoard(Board board) {
         return fileRepository.findByBoard(board)
-                .orElseThrow(() -> new ApiError(ErrorCode.BOARD_NOT_FOUND));
+                .orElseThrow(() -> new ApiError(ErrorCode.FILE_NOT_FOUND));
     }
 
     private File findFile(Long fileNo) {
         return fileRepository.findByFileNo(fileNo)
                 .orElseThrow(() -> new ApiError(ErrorCode.FILE_NOT_FOUND));
     }
-
-
-
-
-
 }
