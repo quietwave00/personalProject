@@ -1,8 +1,13 @@
 package blog.domain.entity;
 
+import blog.web.file.controller.dto.response.UploadFileResponseDto;
+import blog.web.file.service.dto.SaveFileDto;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Builder
 @Entity
@@ -37,17 +42,17 @@ public class File {
     /*
      *비즈니스 로직
      */
-    public File createFile(String fileName, FileLevel fileLevel, String filePath, Board board) {
-        return File.builder()
-                .fileName(fileName)
-                .fileLevel(fileLevel)
-                .filePath(filePath)
-                .board(board)
-                .build();
-    }
 
     public void deleteFile() {
         this.status = Status.N;
+    }
+
+    public boolean hasMain() {
+        return this.getFileLevel().equals(FileLevel.MAIN);
+    }
+
+    public void setFileLevelToMain() {
+        this.fileLevel = FileLevel.MAIN;
     }
 
 

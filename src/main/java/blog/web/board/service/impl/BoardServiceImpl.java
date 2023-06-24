@@ -175,7 +175,7 @@ public class BoardServiceImpl implements BoardService {
 
 
     //단일 메소드
-    private Board findBoard(Long boardNo) {
+    public Board findBoard(Long boardNo) {
         return boardRepository.findByBoardNo(boardNo)
                 .orElseThrow(() -> new ApiError(ErrorCode.BOARD_NOT_FOUND));
     }

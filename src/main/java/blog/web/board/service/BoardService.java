@@ -1,5 +1,6 @@
 package blog.web.board.service;
 
+import blog.domain.entity.Board;
 import blog.web.board.controller.dto.request.CreateBoardRequestDto;
 import blog.web.board.controller.dto.request.DeleteBoardRequestDto;
 import blog.web.board.controller.dto.request.UpdateBoardRequestDto;
@@ -30,4 +31,6 @@ public interface BoardService {
     Boolean isBoardLiked(Long boardNo);
 
     List<GetBoardByHashtagResponseDto> getBoardByHashtag(String hashtag);
+
+    Board findBoard(Long boardNo);
 }

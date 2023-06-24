@@ -4,6 +4,7 @@ import blog.web.file.controller.dto.request.UpdateFileRequestDto;
 import blog.web.file.controller.dto.response.GetMainFileByBoardResponseDto;
 import blog.web.file.controller.dto.response.UpdateFileResponseDto;
 import blog.web.file.controller.dto.response.UploadFileResponseDto;
+import blog.web.file.service.FileFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,10 +21,11 @@ import java.util.List;
 public class FileController {
 
     private final FileService fileService;
+    private final FileFacade fileFacade;
 
     @PostMapping("/files/{boardNo}")
     public ApiResult<List<UploadFileResponseDto>> upload(@RequestPart List<MultipartFile> multipartFileList, @PathVariable("boardNo") Long boardNo) throws IOException {
-        List<UploadFileResponseDto> uploadFileResponseDtoList = fileService.upload(multipartFileList, boardNo);
+        List<UploadFileResponseDto> uploadFileResponseDtoList = fileFacade.upload(multipartFileList, boardNo);
         return ApiUtils.success(uploadFileResponseDtoList);
     }
 
