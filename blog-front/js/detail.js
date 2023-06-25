@@ -2,7 +2,7 @@
 const trackId = new URLSearchParams(window.location.search).get('trackId');
 window.onload = () => {
     //Select Track
-    fetch('http://localhost:8080/musics/board/' + trackId, {
+    fetch(`${host}/musics/board/` + trackId, {
         method: "GET",
         headers: {
             "Content-Type": "application/json"
@@ -17,7 +17,7 @@ window.onload = () => {
     })
 
     //Select Board
-    fetch('http://localhost:8080/blog/user/boards/' + trackId + "/byOrder", {
+    fetch(`${host}/blog/user/boards/` + trackId + "/byOrder", {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -155,14 +155,13 @@ const makeHashtag = (hashtag) => {
 }
 
 const deleteHashtag = (hashtagId) => {
-    console.log("deleteHashtag called, id: " + hashtagId);
     document.getElementById(hashtagId).remove();
 }
 
 //Write Board
 document.getElementById('write-button').addEventListener('click', function() {
     console.log(hashtagArray);
-    fetch('http://localhost:8080/blog/user/boards',{
+    fetch(`${host}/blog/user/boards`,{
         method:"POST",
         headers: {
             "Content-Type": "application/json",
@@ -201,6 +200,51 @@ document.getElementById('write-button').addEventListener('click', function() {
     })
 });
 
+//File Event
+const btnUpload = document.querySelector("#upload_file");
+const btnOuter = document.querySelector(".button_outer");
+const errorMsg = document.querySelector(".error_msg");
+const uploadedView = document.querySelector("#uploaded_view");
+let formData = new FormData();
+let imgCount = 1;
+
+btnUpload.addEventListener("change", function(e) {    
+    let ext = btnUpload.value.split('.').pop().toLowerCase();
+    if (!['gif', 'png', 'jpg', 'jpeg'].includes(ext)) {
+        errorMsg.textContent = "이미지 파일을 선택해 주세요";
+    } else {
+        //Image Preview
+        btnOuter.classList.add("file_uploaded");
+        let uploadedFile = URL.createObjectURL(e.target.files[0]);
+        let imgDiv = document.createElement("div");
+        imgDiv.className = "img_div"
+        imgDiv.id = `img${imgCount++}`;
+        let img = document.createElement("img");
+        img.src = uploadedFile;
+        imgDiv.appendChild(img);
+        uploadedView.appendChild(imgDiv);
+        uploadedView.classList.add("show");
+        deleteImg(imgDiv.id);
+    }
+});
+
+const deleteImg = (deleteId) => {
+    console.log("imgCountWhenDeleteImgRun: " + deleteId);
+    document.getElementById(deleteId).addEventListener("click", () => {
+        console.log("Delete Image: " + deleteId);
+        uploadedView.innerHTML = "";
+        btnOuter.classList.remove("file_uploading");
+        btnOuter.classList.remove("file_uploaded"); 
+    })
+}
+
+
+// const fileRemoveBtn = document.querySelector(".file_remove");
+// fileRemoveBtn.addEventListener("click", function(e) {
+    
+// });
+
+
 //Move To The Board
 const moveDetails = () => {
     console.log("move to board Called");
@@ -214,3 +258,4 @@ const moveDetails = () => {
         })
     }
 }
+

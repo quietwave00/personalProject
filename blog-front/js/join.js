@@ -1,5 +1,5 @@
 document.getElementById('join-button').addEventListener('click', () => {
-    fetch('http://localhost:8080/blog/join', {
+    fetch(`${host}/blog/join`, {
         method: 'POST',
         headers: {
             "content-type": "application/json",

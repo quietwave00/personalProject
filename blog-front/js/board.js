@@ -16,9 +16,9 @@ function onloadData(url, successCallback) {
 }
 
 window.onload = () => {
-    onloadData(`http://localhost:8080/blog/user/board/${boardNo}`, showBoard);
-    onloadData(`http://localhost:8080/blog/user/comments/${boardNo}`, showComments);
-    onloadData(`http://localhost:8080/blog/user/boards/like/count/${boardNo}`, (response) => {
+    onloadData(`${host}/blog/user/board/${boardNo}`, showBoard);
+    onloadData(`${host}/blog/user/comments/${boardNo}`, showComments);
+    onloadData(`${host}/blog/user/boards/like/count/${boardNo}`, (response) => {
         console.log("like check: " + response);
         document.getElementById("like-button-area").innerHTML = `<input type = "hidden" id = "checkLiked" value = ${response}>`;
         if (response == true) {
@@ -65,7 +65,7 @@ const showBoard = (board) => {
 
 //Write Comment
 document.getElementById('comment-write-button').addEventListener('click', () => {
-    fetch('http://localhost:8080/blog/user/comments', {
+    fetch(`${host}/blog/user/comments`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -141,7 +141,7 @@ document.getElementById('like-button-area').addEventListener('click', function()
     console.log("클릭했을 때 value값: " + document.getElementById('checkLiked').value);
     if(document.getElementById('checkLiked').value == 'true') { //좋아요했음
         console.log('Liked True');
-        fetch('http://localhost:8080/blog/user/boards/like/' + boardNo, {
+        fetch(`${host}/blog/user/boards/like/` + boardNo, {
             method: 'DELETE',
             headers: {
                 "Content-Type": "application/json",
@@ -160,7 +160,7 @@ document.getElementById('like-button-area').addEventListener('click', function()
             }
         });
     } else { //좋아요안했음
-        fetch('http://localhost:8080/blog/user/boards/like', {
+        fetch(`${host}/blog/user/boards/like`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -211,7 +211,7 @@ const showRepliesForm = (commentNo) => {
 
 //Add Reply
 const addReplies = (parentNo, replyInput) => {
-    fetch('http://localhost:8080/blog/user/comments/replies', {
+    fetch(`${host}/blog/user/comments/replies`, {
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
@@ -256,7 +256,7 @@ const showReply = (parentNo, reply) => {
 
 //Hashtag Event
 const getBoardListByHashtag = (tag) => {
-    fetch('http://localhost:8080/blog/user/hashtag/' + tag, {
+    fetch(`${host}/blog/user/hashtag/` + tag, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",

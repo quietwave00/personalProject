@@ -1,7 +1,7 @@
 
 //로그인
 document.getElementById("submit").addEventListener("click", function() {
-    fetch('http://localhost:8080/login',{
+    fetch(`${host}/login`,{
         method:"POST",
         headers: {
             "Content-Type": "application/json"

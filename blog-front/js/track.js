@@ -3,7 +3,7 @@ window.onload = function() {
     //Track Select
     const keyword = new URLSearchParams(window.location.search).get('keyword');
 
-    fetch('http://localhost:8080/musics/' + keyword,{
+    fetch(`${host}/musics/` + keyword,{
         method:"GET",
         headers: {
             "Content-Type": "application/json"
