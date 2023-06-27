@@ -14,7 +14,7 @@ window.onload = () => {
             console.log("moved to track Success");
             showTrack(res.response);
         }
-    })
+    });
 
     //Select Board
     fetch(`${host}/blog/user/boards/` + trackId + "/byOrder", {
@@ -30,7 +30,21 @@ window.onload = () => {
             console.log("select board Success");
             showBoards(res.response);
         }
-    })
+    });
+}
+
+//Move To The Board
+const moveDetails = () => {
+    console.log("move to board Called");
+    const boardElements = document.getElementsByClassName('board-element');
+
+    for(let element of boardElements) {
+        element.addEventListener('click', (e) => {
+            const boardNo = e.currentTarget.querySelector('.board-no').value;
+            console.log("select boardNo: " + boardNo);
+            window.location.href = `board.html?boardNo=${boardNo}`;
+        })
+    }
 }
 
 const showTrack = (track) => {
@@ -151,7 +165,6 @@ const makeHashtag = (hashtag) => {
 
         `;
     hashtagArray.push(hashtag);
-    console.log(hashtagArray);
 }
 
 const deleteHashtag = (hashtagId) => {
@@ -160,7 +173,10 @@ const deleteHashtag = (hashtagId) => {
 
 //Write Board
 document.getElementById('write-button').addEventListener('click', function() {
-    console.log(hashtagArray);
+    writeBoard();
+});
+
+const writeBoard = () => {
     fetch(`${host}/blog/user/boards`,{
         method:"POST",
         headers: {
@@ -176,7 +192,6 @@ document.getElementById('write-button').addEventListener('click', function() {
     .then((res) => res.json())
     .then(res => {
         if(res.success == true) {
-            console.log("Write Board Success");
             document.getElementById('alert-area').innerHTML =
             `
                 <div class = "alert alert-dark hide" role = "alert">
@@ -194,23 +209,43 @@ document.getElementById('write-button').addEventListener('click', function() {
                     alertDiv.style.display = 'none';
                 }
             }, 10);
-            console.log("Board: " + JSON.stringify(res.response));
             showBoard(res.response);
+            addFile(res.response.boardNo);
         }
+    });
+}
+
+const addFile = (boardNo) => {
+    fetch(`${host}/blog/user/files/${boardNo}`, {
+        method:"POST",
+        headers: {
+            "Authorization": localStorage.getItem("Authorization")
+        },
+        body: formData
     })
-});
+    .then((res) => res.json())
+    .then(res => {
+        if(res.success === true) {
+            console.log("Add File Success");
+        }
+    });
+}
+
+
+
 
 //File Event
 const btnUpload = document.querySelector("#upload_file");
 const btnOuter = document.querySelector(".button_outer");
 const errorMsg = document.querySelector(".error_msg");
 const uploadedView = document.querySelector("#uploaded_view");
-let formData = new FormData();
+const formData = new FormData();
+const fileInputList = [];
 let imgCount = 1;
 
 btnUpload.addEventListener("change", function(e) {    
     let ext = btnUpload.value.split('.').pop().toLowerCase();
-    if (!['gif', 'png', 'jpg', 'jpeg'].includes(ext)) {
+    if (!['png', 'jpg', 'jpeg'].includes(ext)) {
         errorMsg.textContent = "이미지 파일을 선택해 주세요";
     } else {
         //Image Preview
@@ -224,38 +259,43 @@ btnUpload.addEventListener("change", function(e) {
         imgDiv.appendChild(img);
         uploadedView.appendChild(imgDiv);
         uploadedView.classList.add("show");
-        deleteImg(imgDiv.id);
+
+        //Add file to formData
+        const fileInput = e.target.files[0];
+        formData.append('multipartFileList', fileInput);
+
+        fileInputList.push(e.target.files[0]);
+        deleteImg();
     }
 });
 
-const deleteImg = (deleteId) => {
-    console.log("imgCountWhenDeleteImgRun: " + deleteId);
-    document.getElementById(deleteId).addEventListener("click", () => {
-        console.log("Delete Image: " + deleteId);
-        uploadedView.innerHTML = "";
-        btnOuter.classList.remove("file_uploading");
-        btnOuter.classList.remove("file_uploaded"); 
-    })
+const deleteImg = () => {
+    const parentImgDiv = document.querySelector('#uploaded_view');
+    const imgDivList = parentImgDiv.querySelectorAll('.img_div');
+
+    parentImgDiv.addEventListener('click', (event) => {
+      event.stopPropagation(); // Stop event propagation
+    });
+
+    imgDivList.forEach((imgDiv) => {
+        imgDiv.addEventListener('click', (event) => {
+            //Delete from Preview
+            event.currentTarget.remove();
+            btnOuter.classList.remove("file_uploading");
+            btnOuter.classList.remove("file_uploaded");
+            
+            // Remove file from fileInputList
+            const clickedImgDiv = event.currentTarget;
+            const imgDivId = clickedImgDiv.id;
+            const fileIndex = Number(imgDivId.slice(3)) - 1;
+            fileInputList.splice(fileIndex, 1);
+            clickedImgDiv.remove();
+        });
+    });
 }
 
 
-// const fileRemoveBtn = document.querySelector(".file_remove");
-// fileRemoveBtn.addEventListener("click", function(e) {
-    
-// });
 
 
-//Move To The Board
-const moveDetails = () => {
-    console.log("move to board Called");
-    const boardElements = document.getElementsByClassName('board-element');
 
-    for(let element of boardElements) {
-        element.addEventListener('click', (e) => {
-            const boardNo = e.currentTarget.querySelector('.board-no').value;
-            console.log("select boardNo: " + boardNo);
-            window.location.href = `board.html?boardNo=${boardNo}`;
-        })
-    }
-}
 

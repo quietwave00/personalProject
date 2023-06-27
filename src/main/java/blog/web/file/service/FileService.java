@@ -33,29 +33,7 @@ public class FileService {
     private final BoardRepository boardRepository;
     private final FileMapper fileMapper;
 
-//    private final AmazonS3Client amazonS3Client;
-//
-//    @Value("${cloud.aws.s3.bucket}")
-//    private String S3Bucket;
-
     private final S3ClientUtils s3Utils;
-
-
-//    @Override
-//    public List<UploadFileResponseDto> upload(List<MultipartFile> multipartFileList, Long boardNo) throws IOException {
-//        List<UploadFileResponseDto> uploadFileResponseDtoList = new ArrayList<>();
-//        List<SaveFileDto> saveFileDtoList = s3Utils.getS3File(multipartFileList);
-//        Board findBoard = findBoard(boardNo);
-//        for (SaveFileDto saveFileDto : saveFileDtoList) {
-//            FileLevel fileLevel = (saveFileDto.getIndex() == 0) ? FileLevel.MAIN : FileLevel.SUB;
-//            File createFile = new File().createFile(saveFileDto.getOriginalName(), fileLevel, saveFileDto.getFilePath(), findBoard);
-//            File savedFile = fileRepository.save(createFile);
-//            UploadFileResponseDto uploadFileResponseDto = fileMapper.toUploadDto(savedFile);
-//            uploadFileResponseDtoList.add(uploadFileResponseDto);
-//        }
-//        return uploadFileResponseDtoList;
-//    }
-
 
     public List<UploadFileResponseDto> upload(List<SaveFileDto> saveFileDtoList, Board board) throws IOException {
         List<File> files = fileMapper.toEntities(saveFileDtoList, board);
