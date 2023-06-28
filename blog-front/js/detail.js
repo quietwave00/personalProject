@@ -216,6 +216,11 @@ const writeBoard = () => {
 }
 
 const addFile = (boardNo) => {
+    const formData = new FormData();
+        for (const value of beforeFormData.values()) {
+            formData.append('multipartFileList', value);
+    }
+
     fetch(`${host}/blog/user/files/${boardNo}`, {
         method:"POST",
         headers: {
@@ -228,7 +233,7 @@ const addFile = (boardNo) => {
         if(res.success === true) {
             console.log("Add File Success");
         }
-    });
+    })
 }
 
 
@@ -239,8 +244,7 @@ const btnUpload = document.querySelector("#upload_file");
 const btnOuter = document.querySelector(".button_outer");
 const errorMsg = document.querySelector(".error_msg");
 const uploadedView = document.querySelector("#uploaded_view");
-const formData = new FormData();
-const fileInputList = [];
+const beforeFormData = new FormData();
 let imgCount = 1;
 
 btnUpload.addEventListener("change", function(e) {    
@@ -262,9 +266,8 @@ btnUpload.addEventListener("change", function(e) {
 
         //Add file to formData
         const fileInput = e.target.files[0];
-        formData.append('multipartFileList', fileInput);
+        beforeFormData.append(`imgDiv${imgDiv.id}`, fileInput);
 
-        fileInputList.push(e.target.files[0]);
         deleteImg();
     }
 });
@@ -284,12 +287,10 @@ const deleteImg = () => {
             btnOuter.classList.remove("file_uploading");
             btnOuter.classList.remove("file_uploaded");
             
-            // Remove file from fileInputList
-            const clickedImgDiv = event.currentTarget;
-            const imgDivId = clickedImgDiv.id;
-            const fileIndex = Number(imgDivId.slice(3)) - 1;
-            fileInputList.splice(fileIndex, 1);
-            clickedImgDiv.remove();
+            //Delete from formData
+            const fileKey = imgDiv.id;
+            console.log("fileKey: " + fileKey);
+            beforeFormData.delete(fileKey);
         });
     });
 }

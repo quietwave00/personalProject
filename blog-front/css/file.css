@@ -14,3 +14,6 @@ body {background: #f6f6f6; color: #444; font-family: 'Roboto', sans-serif; font-
 .uploaded_file_view.show {opacity: 1;}
 .error_msg {text-align: center; color: #aaa}
 .img_div {display: inline;}
+.img_div_wrapper {display: flex;
+    align-items: center; /* 수직 중앙 정렬 */
+  }
