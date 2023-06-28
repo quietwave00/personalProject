@@ -34,12 +34,14 @@ public class FileMapper {
                 .collect(Collectors.toList());
     }
 
-    public UpdateFileResponseDto toUpdateDto(File file) {
-        return UpdateFileResponseDto.builder()
-                .fileNo(file.getFileNo())
-                .filePath(file.getFilePath())
-                .fileLevel(file.getFileLevel())
-                .build();
+    public List<UpdateFileResponseDto> toUpdateDtoList(List<File> files) {
+        return files.stream()
+                .map(file -> UpdateFileResponseDto.builder()
+                        .fileNo(file.getFileNo())
+                        .filePath(file.getFilePath())
+                        .fileLevel(file.getFileLevel())
+                        .build())
+                .collect(Collectors.toList());
     }
 
     public GetMainFileByBoardResponseDto toGetMainDto(File file) {

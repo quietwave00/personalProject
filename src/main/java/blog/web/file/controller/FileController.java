@@ -30,14 +30,15 @@ public class FileController {
     }
 
     @PatchMapping("/files")
-    public ApiResult<List<UpdateFileResponseDto>> update(@RequestBody UpdateFileRequestDto updateFileRequestDto) throws IOException {
-        List<UpdateFileResponseDto> updateFileResponseDtoList = fileService.update(updateFileRequestDto);
+    public ApiResult<List<UpdateFileResponseDto>> update(@RequestPart(value = "files") List<MultipartFile> multipartFileList, @RequestPart(value = "dto") UpdateFileRequestDto updateFileRequestDto) throws IOException {
+        System.out.println("multipart: " + multipartFileList.get(0) +", dto: " + updateFileRequestDto.getBoardNo());
+        List<UpdateFileResponseDto> updateFileResponseDtoList = fileFacade.update(multipartFileList, updateFileRequestDto);
         return ApiUtils.success(updateFileResponseDtoList);
     }
 
     @GetMapping("/files/main/{boardNo}")
     public ApiResult<List<GetMainFileByBoardResponseDto>> getFiles(@PathVariable("boardNo") Long boardNo) {
-        List<GetMainFileByBoardResponseDto> getFileByBoardResponseDtoList = fileService.get(boardNo);
+        List<GetMainFileByBoardResponseDto> getFileByBoardResponseDtoList = fileService.getFiles(boardNo);
         return ApiUtils.success(getFileByBoardResponseDtoList);
     }
 

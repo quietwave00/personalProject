@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @Getter
-public class UpdateFileRequestDto {
+public class UploadFileRequestDto {
+    private List<MultipartFile> multipartFileList;
     private Long boardNo;
-    private List<Long> fileNoList;
 }
