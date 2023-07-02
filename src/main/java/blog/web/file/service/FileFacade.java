@@ -41,8 +41,7 @@ public class FileFacade {
     public List<UpdateFileResponseDto> update(List<MultipartFile> multipartFileList, UpdateFileRequestDto updateFileRequestDto) throws IOException {
         List<SaveFileDto> saveFileDtoList = s3ClientUtils.getS3File(multipartFileList);
         Board findBoard = boardService.findBoard(updateFileRequestDto.getBoardNo());
-        List<File> checkFileList = fileService.findFileByBoard(findBoard);
-        return fileService.update(saveFileDtoList, checkFileList, updateFileRequestDto, findBoard);
+        return fileService.update(saveFileDtoList, updateFileRequestDto, findBoard);
     }
 
 }

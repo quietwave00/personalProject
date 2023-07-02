@@ -27,25 +27,13 @@ public class File {
     @Enumerated(EnumType.STRING)
     private FileLevel fileLevel;
 
-    @Enumerated(EnumType.STRING)
-    private Status status;
-
     @ManyToOne
     @JoinColumn(name = "boardNo")
     private Board board;
 
-    @PrePersist
-    public void prePersist(){
-        this.status = this.status == null ? Status.Y : this.status;
-    }
-
     /*
      *비즈니스 로직
      */
-
-    public void deleteFile() {
-        this.status = Status.N;
-    }
 
     public boolean hasMain() {
         return this.getFileLevel().equals(FileLevel.MAIN);
